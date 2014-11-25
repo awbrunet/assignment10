@@ -1,8 +1,20 @@
-<!--Aaron Brunet
-CS148 Assignment 5 Form 
-Largely based on Bob's example form-->
 <?php
 include "top.php";
+
+
+/*
+DATABASE CREATION
+
+CREATE TABLE IF NOT EXISTS `tblRegister` (
+  `pmkRegisterId` int(11) NOT NULL AUTO_INCREMENT,
+  `fldEmail` varchar(65) DEFAULT NULL,
+  `fldDateJoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldConfirmed` tinyint(1) NOT NULL DEFAULT '0',
+  `fldApproved` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pmkRegisterId`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+*/
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -34,16 +46,19 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
+$screenName = "";
+$email = "";
 
-$professor = "";
-$subject = "";
-$courseNum = "";
-$building = "";
-$startTime = "";
-$zSection = "";
-$type = "";
+//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
+//
+// SECTION: 1d form error flags
+//
+// Initialize Error Flags one for each form element we validate
+// in the order they appear in section 1c.
+$screenNameERROR = false;
+$emailERROR = false;
 
-//I'M NOT SURE IF THESE PARTS ARE NECESSARY BUT I DON'T WANNA ACCIDENTALLY BREAK MY CODE
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -54,20 +69,24 @@ $errorMsg = array();
 // array used to hold form values that will be written to a CSV file
 $dataRecord = array();
 
+$mailed=false; // have we mailed the information to the user?
+$messageA = "";
+$messageB = "";
+$messageC = "";
+
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2 Process for when the form is submitted
 //
-// Make the button do the thing!
 if (isset($_POST["btnSubmit"])) {
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     // SECTION: 2a Security
-    // The security check included with the example form
+    // 
     if (!securityCheck(true)) {
-        $msg = "<p>Sorry you cannot access this page. ";
-        $msg.= "Security breach detected and reported</p>";
+        $msg = "<p>ACCESS DENIED, DUDE";
+        $msg.= "<i>WOOP WOOP</i> DAS DA SOUND OF DA POLICE</p>";
         die($msg);
     }
     
@@ -77,15 +96,22 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
     
-    // Associate variables with the form data
+    $screenName = htmlentities($_POST["txtScreenName"], ENT_QUOTES, "UTF-8");
+    $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
+    
 
-    $subject = htmlentities($_POST["txtSubject"], ENT_QUOTES, "UTF-8");
-    $courseNum = htmlentities($_POST["txtCourseNum"], ENT_QUOTES, "UTF-8");
-    $professor = htmlentities($_POST["txtProfessor"], ENT_QUOTES, "UTF-8");
-	  $startTime = htmlentities($_POST["txtStartTime"], ENT_QUOTES, "UTF-8");
-    $building = htmlentities($_POST["lstBuilding"], ENT_QUOTES, "UTF-8");
-    $zSection = htmlentities($_POST["chkZSection"], ENT_QUOTES, "UTF-8");
-    $type = htmlentities($_POST["lstType"], ENT_QUOTES, "UTF-8");
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //
+    // SECTION: 2c Validation
+    //
+    // Validation section. Check each value for possible errors, empty or
+    // not what we expect. You will need an IF block for each element you will
+    // check (see above section 1c and 1d). The if blocks should also be in the
+    // order that the elements appear on your form so that the error messages
+    // will be in the order they appear. errorMsg will be displayed on the form
+    // see section 3b. The error flag ($emailERROR) will be used in section 3c.
+
+    //assume true
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -93,9 +119,6 @@ if (isset($_POST["btnSubmit"])) {
     //
     // Process for when the form passes validation (the errorMsg array is empty)
     //
-
-    // LET'S GET TO THE HARD WORK NOW
-
     if (!$errorMsg) {
         if ($debug)
             print "<p>Form is valid</p>";
@@ -107,73 +130,116 @@ if (isset($_POST["btnSubmit"])) {
         // Process for when the form passes validation (the errorMsg array is empty)
         //
 
-        /* ##### Step one 
-         * 
-         * create your database object using the appropriate database username
-         */
-        
-        // Create database
+        $primaryKey = "";
+        $dataEntered = false;
+
         require_once('../bin/myDatabase.php');
 
-        $dbUserName = 'awbrunet_reader';
-        $whichPass = "r"; //flag for which one to use.
+        $dbUserName = 'awbrunet_admin';
+        $whichPass = "a"; //flag for which one to use.
         $dbName =  'AWBRUNET_UVM_Courses';
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
-        
+	
+	//CREATE IF IT DOESN'T EXIST
+	$query = 'CREATE TABLE IF NOT EXISTS tblRegister ( ';
+	$query .= 'pmkRegisterId int(11) NOT NULL AUTO_INCREMENT, ';
+	$query .= 'fldEmail varchar(65) DEFAULT NULL, ';
+	$query .= 'fldDateJoined timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, ';
+	$query .= 'fldConfirmed tinyint(1) NOT NULL DEFAULT "0", ';
+	$query .= 'fldApproved tinyint(4) NOT NULL DEFAULT "0", ';
+	$query .= 'PRIMARY KEY (pmkRegisterId) ';
+	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+	$results = $thisDatabase->insert($query);
 
-        /* ##### Step two
-         * Build the query
-         *      
-         */
-		//whole table 
-        $query  = '';
-        $query .= ' SELECT concat(tblCourses.fldDepartment, " ", tblCourses.fldCourseNumber) AS Course, '; //Course (duh)
-        $query .= ' tblCourses.fldCourseName AS Name, '; //Course Name
-        $query .= ' tblSections.fldCRN AS CRN, '; //CRN
-        $query .= ' concat(tblTeachers.fldFirstName, " " , tblTeachers.fldLastName) AS Professor, '; //Professor
-        $query .= ' tblSections.fldSection AS Section, '; //Section
-        $query .= ' tblSections.fldType AS Type, '; //Class type
-        $query .= ' tblSections.fldStart AS Start, '; //Start time
-        $query .= ' tblSections.fldStop AS End, '; //End time
-        $query .= ' tblSections.fldDays AS Days, '; //Days held
-        $query .= ' tblSections.fldBuilding AS Building, '; //Location
-        $query .= ' tblSections.fldRoom AS Room '; //Room #
-        //$query .= ' concat(tblSections.fldBuilding, " " , tblSections.fldRoom) as Location, '; //For some reason this kept breaking my code
-        //so I just separated them        
-        $query .= ' FROM tblCourses, tblSections, tblTeachers ';
-        $query .= ' WHERE pmkNetId = fnkTeacherNetId ';
-        $query .= ' AND pmkCourseId = fnkCourseId';
-		//search terms
-        $query .= ' AND tblCourses.fldDepartment LIKE "' . $subject . '%"';
-		$query .= ' AND tblCourses.fldCourseNumber LIKE "' . $courseNum . '%"';
-		$query .= ' AND tblTeachers.fldLastName LIKE "' . $professor . '%"';
-        $query .= ' AND tblSections.fldStart LIKE "' . $startTime . '%"';
-        $query .= ' AND tblSections.fldBuilding LIKE "' . $building . '%"';
-		//remove annoying CS overlap (searching CS returned CSD and CSYS)
-		if($subject == "CS"){
-			$query .= ' AND tblCourses.fldDepartment NOT LIKE "CSD" ';
-			$query .= ' AND tblCourses.fldDepartment NOT LIKE "CSYS" ';
-		}
-		//check extras
-        if($type != "All"){
-            $query .= ' AND tblSections.fldType LIKE "' . $type . '"';
-        }
-		if($zSection != "Z"){
-            $query .= ' AND tblSections.fldSection NOT LIKE "%Z%" ';
-        }
-        
-        /* ##### Step three
-         * Execute the query
-         *      
-         */
+        try {
+            $thisDatabase->db->beginTransaction();
+            $query = 'INSERT INTO tblRegister SET fldEmail = ?';
+            $data = array($email);
+            if ($debug) {
+                print "<p>sql " . $query;
+                print"<p><pre>";
+                print_r($data);
+                print"</pre></p>";
+            }
+            $results = $thisDatabase->insert($query, $data);
 
-        // DO THE THING
-        $results = $thisDatabase->select($query);
+            $primaryKey = $thisDatabase->lastInsert();
+
+            $query = "UPDATE tblRegister set fldConfirmed=1 WHERE fldEmail = ? ";
+            $data = array($email); 
+            $results = $thisDatabase->update($query, $data); 
+
+
+            if ($debug)
+                print "<p>pmk= " . $primaryKey;
+
+	// all sql statements are done so lets commit to our changes
+            $dataEntered = $thisDatabase->db->commit();
+            $dataEntered = true;
+            if ($debug)
+                print "<p>transaction complete ";
+        } catch (PDOException $e) {
+            $thisDatabase->db->rollback();
+            if ($debug)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
+        }
+        // If the transaction was successful, give success message
+        if ($dataEntered) {
+            if ($debug)
+                print "<p>data entered now prepare keys ";
+            //#################################################################
+            // create a key value for confirmation
+
+            $query = "SELECT fldDateJoined FROM tblRegister WHERE pmkRegisterId=" . $primaryKey;
+            $results = $thisDatabase->select($query);
+
+            $dateSubmitted = $results[0]["fldDateJoined"];
+
+            $key1 = sha1($dateSubmitted);
+            $key2 = $primaryKey;
+
+            if ($debug)
+                print "<p>key 1: " . $key1;
+            if ($debug)
+                print "<p>key 2: " . $key2;
+
+
+            //#################################################################
+            //
+            //Put forms information into a variable to print on the screen
+            //
+
+            $messageA = '<h2>Thank you for registering.</h2>';
+
+            $messageB = "<p>Click this link to confirm your registration: ";
+            $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
+            $messageB .= "<p>or copy and paste this url into a web browser: ";
+            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
+
+            $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
+
         
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //
+        // SECTION: 2g Mail to user
+        //
+        // Process for mailing a message which contains the forms data
+        // the message was built in section 2f.
+        $to = $email; // the person who filled out the form
+        $cc = "";
+        $bcc = "";
+        $from = "CRUD <noreply@uvm.edu>";
+
+        // subject of mail should make sense to your form
+        $todaysDate = strftime("%x");
+        $subject = "CRUD: " . $todaysDate;
+
+        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         
     } // end form is valid
-    
+    }
 } // ends if form was submitted.
 
 //#############################################################################
@@ -181,49 +247,37 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION 3 Display Form
 //
 ?>
-	<!-- MAKE THE MAGIC HAPPPENNNNNN -->
-	<article id="main">
+
+<article id="main">
+
     <?php
     //####################################
     //
     // SECTION 3a.
     //
+    // 
+    // 
+    // 
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        /* ##### Step four
-         * prepare output and loop through array
-         *
-         */
-        $numberRecords = count($results);
-        if(count($results)==0){
-          print "<h3>No classes found! <a href='form.php'>Search again?</a></h3>";
-        }
-        print "<br><table>";
-        $firstTime = true;
+        print "<h1>Your Request has ";
 
-        foreach ($results as $row) {
-            if ($firstTime) {
-                print "<thead><tr>";
-                $keys = array_keys($row);
-                foreach ($keys as $key) {
-                    if (!is_int($key)) {
-                        print "<th>" . $key . "</th>";
-                    }
-                }
-                print "</tr>";
-                $firstTime = false;
-            }
-            
-            print "<tr>";
-            foreach ($row as $field => $value) {
-                if (!is_int($field)) {
-                    print "<td>" . $value . "</td>";
-                }
-            }
-            print "</tr>";
+        if (!$mailed) {
+            print "not ";
         }
-        print "</table><br>";
+
+        print "been processed</h1>";
+
+        print "<p>A copy of this message has ";
+        if (!$mailed) {
+            print "not ";
+        }
+        print "been sent</p>";
+        print "<p>To: " . $email . "</p>";
+        print "<p>Mail Message:</p>";
+
+        print $messageA . $messageC;
         
     } else {
 
@@ -267,114 +321,46 @@ if (isset($_POST["btnSubmit"])) {
 
          */
         ?>
-		
-
-		<div id="formHolder"> 
-		<br>
-        <form action="<?php print $phpSelf; ?>" 
+		</article>
+		<div>
+        <form action="<?php print $phpSelf; ?>"
               method="post"
-              id="frmClassSearch"> <!-- make form -->
+              id="frmClassSearch">
 
             <fieldset class="wrapper">
-                <legend><h3>UVM Spring Course Search</h3></legend>
-                <p>Fill out any or all of the search terms below to begin the hunt!</p>
-
+                <legend>CRUD</legend>
                 
+                <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">
-                        <label for="txtSubject">Subject</label>
-                            <input type="text" class="txtfield" id="txtSubject" name="txtSubject"
-                                   value="<?php print $subject; ?>"
-                                   tabindex="100" maxlength="50" placeholder="Enter course subject (ex: CS)"
+                        <label for="txtScreenName">Screen Name</label>
+                            <input type="text" class="txtScreenName" id="txtScreenName" name="txtScreenName"
+                                   value="<?php print $screenName; ?>"
+                                   tabindex="100" maxlength="50" placeholder="Enter your desired screen name"
                                    onfocus="this.select()"
                                    autofocus><br>                        
-                        <label for="txtcourseNum">Course #</label>
-                            <input type="text" class="txtfield" id="txtCourseNum" name="txtCourseNum"
-                                   value="<?php print $courseNum; ?>"
-                                   tabindex="120" maxlength="50" placeholder="Enter course # (ex: 148)"
+                        <label for="txtEmail">Email Address</label>
+                            <input type="text" class="txtfield" id="txtEmail" name="txtEmail"
+                                   value="<?php print $email; ?>"
+                                   tabindex="120" maxlength="50" placeholder="Please enter your email address"
                                    onfocus="this.select()"
                                    autofocus><br>
-						            <label for="txtProfessor">Professor</label>
-                            <input type="text" class="txtfield" id="txtProfessor" name="txtProfessor"
-                                   value="<?php print $professor; ?>"
-                                   tabindex="140" maxlength="50" placeholder="Enter professor's last name (ex: Erickson)"
-                                   onfocus="this.select()"
-                                   autofocus><br>
-                        <label for="txtStartTime">Start Time</label>
-                            <input type="text" class="txtfield" id="txtStartTime" name="txtStartTime"
-                                   value="<?php print $startTime; ?>"
-                                   tabindex="160" maxlength="50" placeholder="Enter start time (ex: 13:00)"
-                                   onfocus="this.select()"
-                                   autofocus><br><br>                    
-                        <!-- this is what I did to make the buildings and class types NOT be hard-coded. 
-                        I toyed with a few methods that all crashed and burned, but this way was suggested
-                        to me by a classmate and it seems to work -->           	
-                        <?php
-						             //pull building and class types rather than hardcode
-                         require_once('../bin/myDatabase.php');
-						             $dbUserName = 'awbrunet_reader';
-                         $whichPass = "r"; //flag for which one to use.
-                         $dbName =  'AWBRUNET_UVM_Courses';
-                         $pullDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
-						             //build a query to pull building names from
-                         $buildingPull = "SELECT DISTINCT fldBuilding ";
-						             $buildingPull .= " FROM tblSections ";
-						             $buildingPull .= " ORDER BY fldBuilding ASC";
-                         $buildingList = $pullDatabase->select($buildingPull);
-						             //make field
-                         print "<label for=\"lstBuilding\"> Building
-                            <select id=\"lstBuilding\"
-									class=\"txtfield\"
-                                    name=\"lstBuilding\"
-                                    tabindex=\"200\" >";
-                         //fill field
-                         for ($row = 0; $row < count($buildingList); $row++) {
-                              for ($col = 0; $col < 1; $col++) {
-                                echo "<option value=\"".$buildingList[$row][$col]."\">".$buildingList[$row][$col]."</option>";
-                              }
-                        }
-                            print "</select></label>";
-					             	//do it all again
-                        $typePull = "SELECT DISTINCT fldType ";
-					             	$typePull .= " FROM tblSections ";
-						            $typePull .= " ORDER BY fldType ASC";
-                        $typeList = $pullDatabase->select($typePull);
-						            //make a default entry for class types (more important than building types because there's no blank)
-                        $default = array("All", "set default");//otherwise the default search is the alphabetically first classtype
-                        array_unshift($typeList, $default);
-                        //make it appear 
-                        //it's like magic
-                        print "<label for=\"lstType\">Type
-                               <select id=\"lstType\"
-									      name=\"lstType\"
-									      tabindex=\"220\" >";
-                        //fill it 
-                         for ($row = 0; $row < count($typeList); $row++) {
-                              for ($col = 0; $col < 1; $col++) {
-                                echo "<option value=\"".$typeList[$row][$col]."\">".$typeList[$row][$col]."</option>\n";
-                              }
-                        }
-                            print "</select></label>";//cap it    
-                         ?>
-
-                         <label>Z-Sections?</label>
-						 <input type="checkbox" id="chkZSection" class="txtfield"		
-                                name="chkZSection" value="Z" tabindex="300" checked>
+						
                     </fieldset> <!-- ends contact -->
                     
-                
+                </fieldset> <!-- ends wrapper Two -->
                 <br>
                 <fieldset class="buttons">
-                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Search for courses" tabindex="500" class="button">
+                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Register!" tabindex="500" class="button">
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->
         </form>
-        </div>
-        </article>
 
     <?php
     } // end body submit
     ?>
+
+</div>
 
 <?php include "footer.php"; ?>
 
