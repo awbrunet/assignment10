@@ -5,13 +5,26 @@ include "top.php";
 /*
 DATABASE CREATION
 
-CREATE TABLE IF NOT EXISTS `tblRegister` (
-  `pmkRegisterId` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `tblUser` (
+  `pmkUserId` int(11) NOT NULL AUTO_INCREMENT,
+  `fldFName` varchar(20) DEFAULT NULL,
+  `fldLName` varchar(20) DEFAULT NULL,
   `fldEmail` varchar(65) DEFAULT NULL,
-  `fldDateJoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `fldConfirmed` tinyint(1) NOT NULL DEFAULT '0',
-  `fldApproved` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pmkRegisterId`)
+  PRIMARY KEY (`pmkUserId`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+  CREATE TABLE IF NOT EXISTS `tblRestaurants` (
+  `pmkRestId` int(11) NOT NULL AUTO_INCREMENT,
+  `fldRestName` varchar(20) DEFAULT NULL,
+  `fldFoodType` varchar(20) DEFAULT NULL,
+  `fldMenuType` varchar(20) DEFAULT NULL,
+  `fldStreetNum` varchar(20) DEFAULT NULL,
+  `fldStreetName` varchar(20) DEFAULT NULL,
+  `fldCity` varchar(20) DEFAULT NULL,
+  `fldZip` varchar(10) DEFAULT NULL,
+  `fldPhone` varchar(15) DEFAULT NULL,
+  `fldRestURL` varchar(65) DEFAULT NULL,
+  PRIMARY KEY (`pmkRestId`)
   ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 */

@@ -17,7 +17,7 @@ include "top.php";
 
 print '<article id="main">';
 
-print '<h1>Registration Confirmation</h1>';
+print '<h1>Approval Confirmation</h1>';
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -82,7 +82,7 @@ if (isset($_GET["q"])) {
         if ($debug)
             print "<h1>Confirmed</h1>";
 
-        $query = "UPDATE tblRegister set fldConfirmed=1 WHERE pmkRegisterId = ? ";
+        $query = "UPDATE tblRegister set fldApproved=1 WHERE pmkRegisterId = ? ";
         $results = $thisDatabase->update($query, $data);
 
         if ($debug) {
@@ -92,25 +92,7 @@ if (isset($_GET["q"])) {
             print_r($data);
             print "</pre></p>";
         }
-        // notify admin
-        $message = '<h2>The following Registration has been confirmed:</h2>';
-
-        $message = "<p>Click this link to approve this registration: ";
-        $message .= '<a href="' . $domain . $path_parts["dirname"] . '/approve.php?q=' . $key2 . '">Approve Registration</a></p>';
-        $message .= "<p>or copy and paste this url into a web browser: ";
-        $message .= $path_parts["dirname"] . '/approve.php?q=' . $key2 . "</p>";
-
-        if ($debug)
-            print "<p>" . $message;
-
-        $to = $adminEmail;
-        $cc = "";
-        $bcc = "";
-        $from = "CRUD <noreply@uvm.edu>";
-        $subject = "New CRUD Thingy Confirmed: Approve?";
-
-        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
-
+        
         if ($debug) {
             print "<p>";
             if (!$mailed) {
@@ -123,9 +105,9 @@ if (isset($_GET["q"])) {
         $to = $email;
         $cc = "";
         $bcc = "";
-        $from = "CRUD <noreply@uvm.edu>";
-        $subject = "CRUD Registration Confirmed";
-        $message = "<p>Thank you for taking the time to confirm your registration. I have no idea what we're doing with this, so thanks for subscribing to CRUD, I guess.</p>";
+        $from = "CRUD Approval <noreply@uvm.edu>";
+        $subject = "CRUD Registration Approval Confirmed";
+        $message = "<p>Thank you for taking the time to approve their registration. You're beautiful, Karol.</p>";
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
 
@@ -135,7 +117,7 @@ if (isset($_GET["q"])) {
             if (!$mailed) {
                 print "NOT ";
             }
-            print "mailed to member: " . $to . ".</p>";
+            print "mailed to admin: " . $to . ".</p>";
         }
     }else{
         print $message;

@@ -96,9 +96,9 @@ if (isset($_GET["q"])) {
         $message = '<h2>The following Registration has been confirmed:</h2>';
 
         $message = "<p>Click this link to approve this registration: ";
-        $message .= '<a href="' . $domain . $path_parts["dirname"] . '/approve.php?q=' . $key2 . '">Approve Registration</a></p>';
+        $message .= '<a href="' . $domain . $path_parts["dirname"] . '/approve.php?q=' . $key1 . '&amp;w=' . $key2 . '">Approve Registration</a></p>';
         $message .= "<p>or copy and paste this url into a web browser: ";
-        $message .= $path_parts["dirname"] . '/approve.php?q=' . $key2 . "</p>";
+        $message .= $path_parts["dirname"] . '/approve.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
 
         if ($debug)
             print "<p>" . $message;
@@ -106,7 +106,7 @@ if (isset($_GET["q"])) {
         $to = $adminEmail;
         $cc = "";
         $bcc = "";
-        $from = "CRUD <noreply@uvm.edu>";
+        $from = "CRUD Registration Approval <noreply@uvm.edu>";
         $subject = "New CRUD Thingy Confirmed: Approve?";
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
@@ -123,7 +123,7 @@ if (isset($_GET["q"])) {
         $to = $email;
         $cc = "";
         $bcc = "";
-        $from = "CRUD <noreply@uvm.edu>";
+        $from = "CRUD Registration <noreply@uvm.edu>";
         $subject = "CRUD Registration Confirmed";
         $message = "<p>Thank you for taking the time to confirm your registration. I have no idea what we're doing with this, so thanks for subscribing to CRUD, I guess.</p>";
 
