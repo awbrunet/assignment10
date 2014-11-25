@@ -192,7 +192,9 @@ if (isset($_POST["btnSubmit"])) {
 
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblRegister SET fldEmail = ?';
+            $query = "INSERT INTO tblUser (fldFName, fldLName, fldEmail) VALUES('$fName', '$lName', '$email') ";            
+            $data = array($fName);
+            $data = array($lName);
             $data = array($email);
             if ($debug) {
                 print "<p>sql " . $query;
@@ -200,7 +202,7 @@ if (isset($_POST["btnSubmit"])) {
                 print_r($data);
                 print"</pre></p>";
             }
-            $results = $thisDatabase->insert($query, $data);
+            $results = $thisDatabase->insert($query,$data);
 
             $primaryKey = $thisDatabase->lastInsert();
 
@@ -366,16 +368,22 @@ if (isset($_POST["btnSubmit"])) {
               id="frmClassSearch">
 
             <fieldset class="wrapper">
-                <legend>CRUD</legend>
+                <legend>Create your myGlutenFree Burlington account!</legend>
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">
-                        <label for="txtScreenName">Screen Name</label>
-                            <input type="text" class="txtScreenName" id="txtScreenName" name="txtScreenName"
-                                   value="<?php print $screenName; ?>"
-                                   tabindex="100" maxlength="50" placeholder="Enter your desired screen name"
+                        <label for="txtFirstName">First Name</label>
+                            <input type="text" class="txtfield" id="txtFirstName" name="txtFirstName"
+                                   value="<?php print $fName; ?>"
+                                   tabindex="100" maxlength="50" placeholder="Enter your first name"
                                    onfocus="this.select()"
-                                   autofocus><br>                        
+                                   autofocus><br>      
+                        <label for="txtLastName">Last Name</label>
+                            <input type="text" class="txtfield" id="txtLastName" name="txtLastName"
+                                   value="<?php print $lName; ?>"
+                                   tabindex="110" maxlength="50" placeholder="Enter your last name"
+                                   onfocus="this.select()"
+                                   autofocus><br>                              
                         <label for="txtEmail">Email Address</label>
                             <input type="text" class="txtfield" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
