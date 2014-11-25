@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS `tblUser` (
   PRIMARY KEY (`pmkRestId`)
   ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+  CREATE TABLE IF NOT EXISTS `tblSavedRestaurants` (  
+  `fnkUserId` int(11) NOT NULL,
+  `fnkRestId` int(11) NOT NULL,
+  PRIMARY KEY (`fnkUserId`,`fnkRestId`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 */
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -59,7 +65,8 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$screenName = "";
+$fName = "";
+$lName = "";
 $email = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -68,7 +75,8 @@ $email = "";
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear in section 1c.
-$screenNameERROR = false;
+$fNameERROR = false;
+$lNameERROR = false;
 $emailERROR = false;
 
 
@@ -109,7 +117,8 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
     
-    $screenName = htmlentities($_POST["txtScreenName"], ENT_QUOTES, "UTF-8");
+    $fName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
+    $lName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
@@ -165,6 +174,37 @@ if (isset($_POST["btnSubmit"])) {
 	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
 	$results = $thisDatabase->insert($query);
 
+    $query = 'CREATE TABLE IF NOT EXISTS tblUser ( ';
+    $query .= 'pmkUserId int(11) NOT NULL AUTO_INCREMENT, ';
+    $query .= 'fldFName varchar(20) DEFAULT NULL, ';
+    $query .= 'fldLName varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldEmail varchar(65) DEFAULT NULL, ';
+    $query .= 'PRIMARY KEY (pmkUserId) ';
+    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+    $results = $thisDatabase->insert($query);
+
+    $query = 'CREATE TABLE IF NOT EXISTS `tblRestaurants` ( ';
+    $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
+    $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
+    $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
+    $query .= 'fldMenuType varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldStreetNum varchar(20) DEFAULT NULL, ';
+    $query .= 'fldStreetName varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldCity varchar(20) DEFAULT NULL, ';
+    $query .= 'fldZip varchar(10) DEFAULT NULL, ';
+    $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
+    $query .= 'fldRestURL varchar(65) DEFAULT NULL, ';
+    $query .= 'PRIMARY KEY (pmkRestId) ';
+    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+    $results = $thisDatabase->insert($query);
+
+    $query = 'CREATE TABLE IF NOT EXISTS `tblSavedRestaurants` (  ';
+    $query .= 'fnkUserId int(11) NOT NULL, ';
+    $query .= 'fnkRestId int(11) NOT NULL, ';
+    $query .= 'PRIMARY KEY (fnkUserId, fnkRestId) ';
+    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+    $results = $thisDatabase->insert($query);
+    
         try {
             $thisDatabase->db->beginTransaction();
             $query = 'INSERT INTO tblRegister SET fldEmail = ?';
