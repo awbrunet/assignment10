@@ -152,6 +152,21 @@ if (isset($_POST["btnSubmit"])) {
 	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
 	$results = $thisDatabase->insert($query);
 
+    $query = 'CREATE TABLE IF NOT EXISTS `tblRestaurants` ( ';
+    $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
+    $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
+    $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
+    $query .= 'fldMenuType varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldStreetNum varchar(20) DEFAULT NULL, ';
+    $query .= 'fldStreetName varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldCity varchar(20) DEFAULT NULL, ';
+    $query .= 'fldZip varchar(10) DEFAULT NULL, ';
+    $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
+    $query .= 'fldRestURL varchar(65) DEFAULT NULL, ';
+    $query .= 'PRIMARY KEY (pmkRestId) ';
+    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+    $results = $thisDatabase->insert($query);
+
         try {
             $thisDatabase->db->beginTransaction();
             $query = 'INSERT INTO tblRegister SET fldEmail = ?';
