@@ -1,0 +1,150 @@
+/*
+Aaron Brunet 
+CS148
+Assignment 5 CSS
+Whenever I make a website for one of Bob's classes, I always
+emulate UVM's style, and I don't know why. No copyright intended,
+I sure hope UVM doesn't get all feisty cause a student used their header 
+image in a homework assignment.
+*/
+
+header{
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    background-color: #2f5c39;
+    margin: auto;
+    padding-bottom: 0;
+}
+
+h3{
+	text-align: center;
+}
+
+body {
+    background-color: #f1f1ec; 
+    padding: 0;
+    margin: 0 auto;
+    font-family: "sansserif";
+    height: 100%;	    
+}
+
+nav {
+    background-color: #8bae35;
+    text-align: center;
+    color: white;
+    margin: auto;
+    width: 100%;    
+    padding-top: 0em;
+    padding-bottom: 0em;
+    display: block;
+}
+nav ol{
+    list-style-type: none;
+    padding: .2em 0;
+    margin: 0;
+}
+nav ol li{
+    transition: .25s;
+    padding: .2em 1em;
+    display: inline-block;
+    text-decoration: none;
+}
+li:hover {
+	transition: .25s;
+	background-color: #2f5c39;
+}
+nav a:link{
+    text-decoration: none;
+}
+nav a:visited{
+	color: white;
+}
+
+article {
+	background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
+	/*background-color: #f1f1ec; */
+	width: 100%;
+	/*margin: auto;*/
+}
+
+footer {
+	background-color: #8bae35;
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	bottom: 0;
+	position: relative;
+	margin: 0 auto -4em;
+	color: white;
+}
+
+table {
+	margin: auto;
+	border: 1px solid;
+	width: 80%;
+	box-shadow: 10px 10px 5px #888888;
+	background: white;
+	border-collapse: collapse;
+}
+table td {
+	border: collapse;
+	border: 1px solid #000;
+	margin: 0em;
+	padding: .25em;
+	
+}
+table th {
+	border: collapse;
+	border: 1px solid;
+	padding: .25em;
+	color: white;
+	background-color: #2f5c39;
+}
+table tr:nth-child(odd) {
+	background-color: #8bae35;
+	color: white;
+}
+
+tr:hover{
+	background-color: #2f5c39;
+}
+tr:nth-child(odd):hover{
+	background-color: #2f5c39;
+}
+
+input[type=text]{
+   width: 20em; 		
+}
+
+#txtfield{
+    width:15em;
+}
+
+#frmClassSearch label{
+    display:inline-block;
+    width:6em;
+}
+
+#formHolder{
+   background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
+   padding: 2em;
+}
+
+#backgroundSpacer{
+   	height: 10px;
+	width: 100%;
+	display:inline;	
+	background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
+}
+
+fieldset {
+   border-style: none;
+}
+form{
+   margin: auto;
+   text-align: center;
+   width: 50%;
+   background-color: #f1f1ec;
+   box-shadow: 10px 10px 5px #888888;		
+}
