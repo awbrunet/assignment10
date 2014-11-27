@@ -44,9 +44,12 @@ $query = 'SELECT fldLogStatus FROM tblUser WHERE fldLogStatus=1';
 session_unset ();
 session_destroy ();
 ?>
+<meta http-equiv="refresh" content="3;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php"/>
 <article> 
-	<h1>You are now logged out.</h1>
-    <p><a href='index.php'>Home</a>
+	<h1>You are now logged out.</h1>    
+    <p>Auto-redirecting, or navigate now: <a href='index.php'>Home</a>
+
 </article>
+<?php include "footer.php"; ?>
 </body>
 </html>

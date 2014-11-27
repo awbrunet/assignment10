@@ -1,21 +1,6 @@
 <?php
 include "top.php";
 
-
-/*
-DATABASE CREATION
-
-CREATE TABLE IF NOT EXISTS `tblRegister` (
-  `pmkRegisterId` int(11) NOT NULL AUTO_INCREMENT,
-  `fldEmail` varchar(65) DEFAULT NULL,
-  `fldDateJoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `fldConfirmed` tinyint(1) NOT NULL DEFAULT '0',
-  `fldApproved` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pmkRegisterId`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-*/
-
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
@@ -46,7 +31,7 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$screenName = "";
+$restName = "";
 $email = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -55,7 +40,7 @@ $email = "";
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear in section 1c.
-$screenNameERROR = false;
+$restNameERROR = false;
 $emailERROR = false;
 
 
@@ -96,24 +81,12 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
     
-    $screenName = htmlentities($_POST["txtScreenName"], ENT_QUOTES, "UTF-8");
+    $restName = htmlentities($_POST["txtRestName"], ENT_QUOTES, "UTF-8");
+    $foodType = htmlentities($_POST["btnFoodType"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    //
-    // SECTION: 2c Validation
-    //
-    // Validation section. Check each value for possible errors, empty or
-    // not what we expect. You will need an IF block for each element you will
-    // check (see above section 1c and 1d). The if blocks should also be in the
-    // order that the elements appear on your form so that the error messages
-    // will be in the order they appear. errorMsg will be displayed on the form
-    // see section 3b. The error flag ($emailERROR) will be used in section 3c.
-
-    //assume true
-
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     // SECTION: 2d Process Form - Passed Validation
     //
@@ -142,21 +115,12 @@ if (isset($_POST["btnSubmit"])) {
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 	
 	//CREATE IF IT DOESN'T EXIST
-	$query = 'CREATE TABLE IF NOT EXISTS tblRegister ( ';
-	$query .= 'pmkRegisterId int(11) NOT NULL AUTO_INCREMENT, ';
-	$query .= 'fldEmail varchar(65) DEFAULT NULL, ';
-	$query .= 'fldDateJoined timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, ';
-	$query .= 'fldConfirmed tinyint(1) NOT NULL DEFAULT "0", ';
-	$query .= 'fldApproved tinyint(4) NOT NULL DEFAULT "0", ';
-	$query .= 'PRIMARY KEY (pmkRegisterId) ';
-	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
-	$results = $thisDatabase->insert($query);
-
-    $query = 'CREATE TABLE IF NOT EXISTS `tblRestaurants` ( ';
+	$query = 'CREATE TABLE IF NOT EXISTS `tblRestaurants` ( ';
     $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
     $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
     $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
     $query .= 'fldMenuType varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldMenuDesc varchar(20) DEFAULT NULL, ';
     $query .= 'fldStreetNum varchar(20) DEFAULT NULL, ';
     $query .= 'fldStreetName varchar(20) DEFAULT NULL, '; 
     $query .= 'fldCity varchar(20) DEFAULT NULL, ';
@@ -164,6 +128,13 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
     $query .= 'fldRestURL varchar(65) DEFAULT NULL, ';
     $query .= 'PRIMARY KEY (pmkRestId) ';
+    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
+    $results = $thisDatabase->insert($query);
+
+    $query = 'CREATE TABLE IF NOT EXISTS `tblSubmittedRestaurants` (  ';
+    $query .= 'fnkUserId int(11) NOT NULL, ';
+    $query .= 'fnkRestId int(11) NOT NULL, ';
+    $query .= 'PRIMARY KEY (fnkUserId, fnkRestId) ';
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
 
@@ -201,7 +172,7 @@ if (isset($_POST["btnSubmit"])) {
             $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
         }
         // If the transaction was successful, give success message
-        if ($dataEntered) {
+        /*if ($dataEntered) {
             if ($debug)
                 print "<p>data entered now prepare keys ";
             //#################################################################
@@ -218,7 +189,7 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug)
                 print "<p>key 1: " . $key1;
             if ($debug)
-                print "<p>key 2: " . $key2;
+                print "<p>key 2: " . $key2;*/
 
 
             //#################################################################
@@ -226,14 +197,9 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h2>Thank you for registering.</h2>';
-
-            $messageB = "<p>Click this link to confirm your registration: ";
-            $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
-            $messageB .= "<p>or copy and paste this url into a web browser: ";
-            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
-
-            $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
+            $messageA = '<h2>Thank you for submitting a new restaurant to myGlutenFree Burlington!</h2>';
+           
+            $messageC .= "<p><b>You submitted:</b><i>   " . $restName . "</i></p>";
 
         
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -347,12 +313,24 @@ if (isset($_POST["btnSubmit"])) {
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">
-                        <label for="txtScreenName">Screen Name</label>
-                            <input type="text" class="txtScreenName" id="txtScreenName" name="txtScreenName"
-                                   value="<?php print $screenName; ?>"
-                                   tabindex="100" maxlength="50" placeholder="Enter your desired screen name"
+                        <label for="txtRestName">Restaurant Name</label>
+                            <input type="text" id="txtRestName" name="txtRestName"
+                                   value="<?php print $RestName; ?>"
+                                   tabindex="100" maxlength="130" placeholder="Enter the restaurant's name"
                                    onfocus="this.select()"
-                                   autofocus><br>                        
+                                   autofocus><br>       
+                        <label for="btnFoodType">Type</label>
+                            <input type="radio" id="btnFoodType" name="btnFoodType" value="0">American
+                            <input type="radio" id="btnFoodType" name="btnFoodType" value="1">Italian
+                            <input type="radio" id="btnFoodType" name="btnFoodType" value="2">Mexican
+                            <input type="radio" id="btnFoodType" name="btnFoodType" value="3">Asian
+                            <input type="radio" id="btnFoodType" name="btnFoodType" value="4">Other                
+                            <br>
+                        <label for="chkMenuType">Menu Options</label>
+                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="0">Gluten-Free Menu
+                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="1">Gluten-Friendly Menu
+                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="2">Gluten-Free Options
+                            <br>
                         <label for="txtEmail">Email Address</label>
                             <input type="text" class="txtfield" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
