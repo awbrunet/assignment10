@@ -164,16 +164,7 @@ if (isset($_POST["btnSubmit"])) {
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 	
 	//CREATE IF IT DOESN'T EXIST
-	$query = 'CREATE TABLE IF NOT EXISTS tblRegister ( ';
-	$query .= 'pmkRegisterId int(11) NOT NULL AUTO_INCREMENT, ';
-	$query .= 'fldEmail varchar(65) DEFAULT NULL, ';
-	$query .= 'fldDateJoined timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, ';
-	$query .= 'fldConfirmed tinyint(1) NOT NULL DEFAULT "0", ';
-	$query .= 'fldApproved tinyint(4) NOT NULL DEFAULT "0", ';
-	$query .= 'PRIMARY KEY (pmkRegisterId) ';
-	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
-	$results = $thisDatabase->insert($query);
-
+	
     $query = 'CREATE TABLE IF NOT EXISTS tblUser ( ';
     $query .= 'pmkUserId int(11) NOT NULL AUTO_INCREMENT, ';
     $query .= 'fldFName varchar(20) DEFAULT NULL, ';
@@ -211,9 +202,9 @@ if (isset($_POST["btnSubmit"])) {
 
             $primaryKey = $thisDatabase->lastInsert();
 
-            $query = "UPDATE tblRegister set fldConfirmed=1 WHERE fldEmail = ? ";
-            $data = array($email); 
-            $results = $thisDatabase->update($query, $data); 
+            //$query = "UPDATE tblRegister set fldConfirmed=1 WHERE fldEmail = ? ";
+            //$data = array($email); 
+            //$results = $thisDatabase->update($query, $data); 
 
 
             if ($debug)
@@ -228,7 +219,7 @@ if (isset($_POST["btnSubmit"])) {
             $thisDatabase->db->rollback();
             if ($debug)
                 print "Error!: " . $e->getMessage() . "</br>";
-            $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
+            $errorMsg[] = "There was a problem with accepting your data; please contact us directly.";
         }
     }
     else{
@@ -237,7 +228,7 @@ if (isset($_POST["btnSubmit"])) {
     }
         // If the transaction was successful, give success message
         if ($dataEntered) {
-            if ($debug)
+            /*if ($debug)
                 print "<p>data entered now prepare keys ";
             //#################################################################
             // create a key value for confirmation
@@ -253,7 +244,7 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug)
                 print "<p>key 1: " . $key1;
             if ($debug)
-                print "<p>key 2: " . $key2;
+                print "<p>key 2: " . $key2;*/
 
 
             //#################################################################
@@ -261,12 +252,11 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h2>Thank you for registering.</h2>';
+            $messageA = '<h2>Thank you for registering, ' .$fName. '.</h2>';
 
-            $messageB = "<p>Click this link to confirm your registration: ";
-            $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
-            $messageB .= "<p>or copy and paste this url into a web browser: ";
-            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
+            $messageB = "<p>Thank you for taking the time to confirm your registration. 
+        <br>Now that you've confirmed your account, you can login to submit new restaurants, or save your favorites for later!
+        <br><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
 
             $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
 
@@ -284,7 +274,7 @@ if (isset($_POST["btnSubmit"])) {
 
         // subject of mail should make sense to your form
         $todaysDate = strftime("%x");
-        $subject = "myGlutenFree Burlington registration: " . $todaysDate;
+        $subject = "myGlutenFree Burlington Registration: " . $todaysDate;
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         
@@ -417,6 +407,8 @@ if (isset($_POST["btnSubmit"])) {
     ?>
 
 </div>
+
+<p> Registered users can submit new restaurants that they discover, as well as save their favorites for later!</p>
 
 <?php include "footer.php"; ?>
 

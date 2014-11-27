@@ -19,11 +19,11 @@ include "top.php";
     $checkLogin = $thisDatabase->select($query);
 
 
-	if(empty($checkLogin)){
+	if(empty($checkLogin)){//If no one is logged in
 
 		print "<p> <a href = 'login.php'>Login</a></p>";
 	}
-	else{
+	else{//Display WHO is logged in
 		$query = 'SELECT fldEmail FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$sessionEmail. '"';
 		$email = $thisDatabase->select($query);
 
