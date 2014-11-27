@@ -165,6 +165,7 @@ if (isset($_POST["btnSubmit"])) {
             <br>Click <a href='register.php'>here</a> to create a new account.</p>";
         }
         else{
+            $_SESSION ['email'] = $email;
             try {
             $thisDatabase->db->beginTransaction();
             $query = 'UPDATE tblUser set fldLogStatus=1 WHERE fldEmail = "' .$email. '"'; 
@@ -208,7 +209,7 @@ if (isset($_POST["btnSubmit"])) {
     // 
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    if (isset($_POST["btnSubmit"]) AND empty($errorMsg) AND !empty($_SESSION ['email'])) { // closing of if marked with: end body submit
         print "<h1>You are now logged in.</h1>";
         print "<p><a href='index.php'>Home</a>";
         

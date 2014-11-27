@@ -6,6 +6,7 @@ include "top.php";
 
 <article id="main">
 	<?php
+	if(!empty($_SESSION['email'])){print $_SESSION ['email'];}
 	require_once('../bin/myDatabase.php');
 
     $dbUserName = 'awbrunet_reader';
@@ -18,6 +19,7 @@ include "top.php";
 
 
 	if(empty($checkLogin)){
+
 		print "<p> <a href = 'login.php'>Login</a></p>";
 	}
 	else{
@@ -29,6 +31,8 @@ include "top.php";
 
 			print $result['fldEmail'];
 		}
+
+		print "<p><a href='logout.php'>Log out?</a></p>";
 	}
 
 	?>

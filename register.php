@@ -194,8 +194,7 @@ if (isset($_POST["btnSubmit"])) {
     $query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
     $checkEmail = $thisDatabase->select($query);
 
-    if(empty($checkEmail)){
-        
+    if(empty($checkEmail)){        
         try {
             $thisDatabase->db->beginTransaction();
             $query = "INSERT INTO tblUser (fldFName, fldLName, fldEmail) VALUES('$fName', '$lName', '$email') ";            

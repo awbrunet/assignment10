@@ -15,6 +15,10 @@
         <link rel="icon" href="lib/favicon.ico" type="image/x-icon">		
 
 	  <?php 
+
+      
+      session_start();
+      
 	  $debug = false;
 
 
