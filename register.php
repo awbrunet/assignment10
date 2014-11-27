@@ -78,7 +78,7 @@ $email = "";
 $fNameERROR = false;
 $lNameERROR = false;
 $emailERROR = false;
-
+$checkEmail = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -190,6 +190,11 @@ if (isset($_POST["btnSubmit"])) {
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
 
+    $query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
+    $checkEmail = $thisDatabase->select($query);
+
+    if(empty($checkEmail)){
+        
         try {
             $thisDatabase->db->beginTransaction();
             $query = "INSERT INTO tblUser (fldFName, fldLName, fldEmail) VALUES('$fName', '$lName', '$email') ";            
@@ -225,6 +230,11 @@ if (isset($_POST["btnSubmit"])) {
                 print "Error!: " . $e->getMessage() . "</br>";
             $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
         }
+    }
+    else{
+        print "<p>Looks like this email is already resgistered! But I appreciate your enthusiasm.</p>";
+    
+    }
         // If the transaction was successful, give success message
         if ($dataEntered) {
             if ($debug)
