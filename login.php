@@ -65,8 +65,6 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$fName = "";
-$lName = "";
 $email = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -75,8 +73,6 @@ $email = "";
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear in section 1c.
-$fNameERROR = false;
-$lNameERROR = false;
 $emailERROR = false;
 $checkEmail = "";
 
@@ -116,9 +112,6 @@ if (isset($_POST["btnSubmit"])) {
     // SECTION: 2b Sanitize (clean) data 
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
-    
-    $fName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
-    $lName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
@@ -163,56 +156,18 @@ if (isset($_POST["btnSubmit"])) {
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 	
-	//CREATE IF IT DOESN'T EXIST
-	$query = 'CREATE TABLE IF NOT EXISTS tblRegister ( ';
-	$query .= 'pmkRegisterId int(11) NOT NULL AUTO_INCREMENT, ';
-	$query .= 'fldEmail varchar(65) DEFAULT NULL, ';
-	$query .= 'fldDateJoined timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, ';
-	$query .= 'fldConfirmed tinyint(1) NOT NULL DEFAULT "0", ';
-	$query .= 'fldApproved tinyint(4) NOT NULL DEFAULT "0", ';
-	$query .= 'PRIMARY KEY (pmkRegisterId) ';
-	$query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
-	$results = $thisDatabase->insert($query);
-
-    $query = 'CREATE TABLE IF NOT EXISTS tblUser ( ';
-    $query .= 'pmkUserId int(11) NOT NULL AUTO_INCREMENT, ';
-    $query .= 'fldFName varchar(20) DEFAULT NULL, ';
-    $query .= 'fldLName varchar(20) DEFAULT NULL, '; 
-    $query .= 'fldEmail varchar(65) DEFAULT NULL, ';
-    $query .= 'fldLogStatus int(11) NOT NULL DEFAULT "0", ';
-    $query .= 'PRIMARY KEY (pmkUserId) ';
-    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
-    $results = $thisDatabase->insert($query);
-
-    $query = 'CREATE TABLE IF NOT EXISTS `tblSavedRestaurants` (  ';
-    $query .= 'fnkUserId int(11) NOT NULL, ';
-    $query .= 'fnkRestId int(11) NOT NULL, ';
-    $query .= 'PRIMARY KEY (fnkUserId, fnkRestId) ';
-    $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
-    $results = $thisDatabase->insert($query);
-
-    $query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
+	$query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
     $checkEmail = $thisDatabase->select($query);
 
-    if(empty($checkEmail)){
-        
-        try {
+        if(empty($checkEmail)){
+            
+            print "<p>No account found! 
+            <br>Click <a href='register.php'>here</a> to create a new account.</p>";
+        }
+        else{
+            try {
             $thisDatabase->db->beginTransaction();
-            $query = "INSERT INTO tblUser (fldFName, fldLName, fldEmail) VALUES('$fName', '$lName', '$email') ";            
-            $data = array($fName);
-            $data = array($lName);
-            $data = array($email);
-            if ($debug) {
-                print "<p>sql " . $query;
-                print"<p><pre>";
-                print_r($data);
-                print"</pre></p>";
-            }
-            $results = $thisDatabase->insert($query,$data);
-
-            $primaryKey = $thisDatabase->lastInsert();
-
-            $query = "UPDATE tblRegister set fldConfirmed=1 WHERE fldEmail = ? ";
+            $query = 'UPDATE tblUser set fldLogStatus=1 WHERE fldEmail = "' .$email. '"'; 
             $data = array($email); 
             $results = $thisDatabase->update($query, $data); 
 
@@ -220,7 +175,7 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug)
                 print "<p>pmk= " . $primaryKey;
 
-	// all sql statements are done so lets commit to our changes
+    // all sql statements are done so lets commit to our changes
             $dataEntered = $thisDatabase->db->commit();
             $dataEntered = true;
             if ($debug)
@@ -229,68 +184,10 @@ if (isset($_POST["btnSubmit"])) {
             $thisDatabase->db->rollback();
             if ($debug)
                 print "Error!: " . $e->getMessage() . "</br>";
-            $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
+            $errorMsg[] = "There was a problem with accepting your data; please contact us directly.";
         }
-    }
-    else{
-        print "<p>Looks like this email is already resgistered! But I appreciate your enthusiasm.</p>";
-    
-    }
-        // If the transaction was successful, give success message
-        if ($dataEntered) {
-            if ($debug)
-                print "<p>data entered now prepare keys ";
-            //#################################################################
-            // create a key value for confirmation
-
-            $query = "SELECT fldDateJoined FROM tblRegister WHERE pmkRegisterId=" . $primaryKey;
-            $results = $thisDatabase->select($query);
-
-            $dateSubmitted = $results[0]["fldDateJoined"];
-
-            $key1 = sha1($dateSubmitted);
-            $key2 = $primaryKey;
-
-            if ($debug)
-                print "<p>key 1: " . $key1;
-            if ($debug)
-                print "<p>key 2: " . $key2;
-
-
-            //#################################################################
-            //
-            //Put forms information into a variable to print on the screen
-            //
-
-            $messageA = '<h2>Thank you for registering.</h2>';
-
-            $messageB = "<p>Click this link to confirm your registration: ";
-            $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
-            $messageB .= "<p>or copy and paste this url into a web browser: ";
-            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
-
-            $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
-
-        
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        //
-        // SECTION: 2g Mail to user
-        //
-        // Process for mailing a message which contains the forms data
-        // the message was built in section 2f.
-        $to = $email; // the person who filled out the form
-        $cc = "";
-        $bcc = "";
-        $from = "myGlutenFree Burlington <noreply@uvm.edu>";
-
-        // subject of mail should make sense to your form
-        $todaysDate = strftime("%x");
-        $subject = "myGlutenFree Burlington registration: " . $todaysDate;
-
-        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
-        
-    } // end form is valid
-    }
+        }
+    }      
 } // ends if form was submitted.
 
 //#############################################################################
@@ -312,23 +209,8 @@ if (isset($_POST["btnSubmit"])) {
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h1>Your Request has ";
-
-        if (!$mailed) {
-            print "not ";
-        }
-
-        print "been processed</h1>";
-
-        print "<p>A copy of this message has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been sent</p>";
-        print "<p>To: " . $email . "</p>";
-        //print "<p>Mail Message:</p>";
-
-        print $messageA . $messageC;
+        print "<h1>You are now logged in.</h1>";
+        print "<p><a href='index.php'>Home</a>";
         
     } else {
 
@@ -383,18 +265,6 @@ if (isset($_POST["btnSubmit"])) {
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">
-                        <label for="txtFirstName">First Name</label>
-                            <input type="text" class="txtfield" id="txtFirstName" name="txtFirstName"
-                                   value="<?php print $fName; ?>"
-                                   tabindex="100" maxlength="50" placeholder="Enter your first name"
-                                   onfocus="this.select()"
-                                   autofocus><br>      
-                        <label for="txtLastName">Last Name</label>
-                            <input type="text" class="txtfield" id="txtLastName" name="txtLastName"
-                                   value="<?php print $lName; ?>"
-                                   tabindex="110" maxlength="50" placeholder="Enter your last name"
-                                   onfocus="this.select()"
-                                   autofocus><br>                              
                         <label for="txtEmail">Email Address</label>
                             <input type="text" class="txtfield" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
@@ -407,7 +277,7 @@ if (isset($_POST["btnSubmit"])) {
                 </fieldset> <!-- ends wrapper Two -->
                 <br>
                 <fieldset class="buttons">
-                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Register!" tabindex="500" class="button">
+                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Login" tabindex="500" class="button">
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->

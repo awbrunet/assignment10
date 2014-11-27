@@ -5,7 +5,7 @@ include "top.php";
 ?>
 
 <article id="main">
-	<p> my account </p>
+	<p> <a href = 'login.php'>Login</a></p>
 </article>
 
 <?php include "footer.php"; ?>
