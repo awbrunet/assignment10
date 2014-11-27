@@ -166,6 +166,7 @@ if (isset($_POST["btnSubmit"])) {
         }
         else{
             $_SESSION ['email'] = $email;
+            $_SESSION ['submitAuth'] = 1;
             try {
             $thisDatabase->db->beginTransaction();
             $query = 'UPDATE tblUser set fldLogStatus=1 WHERE fldEmail = "' .$email. '"'; 

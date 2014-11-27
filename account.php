@@ -6,6 +6,7 @@ include "top.php";
 
 <article id="main">
 	<?php
+	$sessionEmail = $_SESSION['email'];
 	if(!empty($_SESSION['email'])){print $_SESSION ['email'];}
 	require_once('../bin/myDatabase.php');
 
@@ -23,7 +24,7 @@ include "top.php";
 		print "<p> <a href = 'login.php'>Login</a></p>";
 	}
 	else{
-		$query = 'SELECT fldEmail FROM tblUser WHERE fldLogStatus=1';
+		$query = 'SELECT fldEmail FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$sessionEmail. '"';
 		$email = $thisDatabase->select($query);
 
 		print "<p>Logged in as ";
