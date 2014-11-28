@@ -32,7 +32,9 @@ $yourURL = $domain . $phpSelf;
 // Initialize variables one for each form element
 // in the order they appear on the form
 $restName = "";
-$email = "";
+$city = "";
+$state = "";
+$streetAdd = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -41,6 +43,9 @@ $email = "";
 // Initialize Error Flags one for each form element we validate
 // in the order they appear in section 1c.
 $restNameERROR = false;
+$streetAddERROR = false;
+$cityERROR = false;
+$stateERROR = false;
 $emailERROR = false;
 
 
@@ -83,6 +88,9 @@ if (isset($_POST["btnSubmit"])) {
     
     $restName = htmlentities($_POST["txtRestName"], ENT_QUOTES, "UTF-8");
     $foodType = htmlentities($_POST["btnFoodType"], ENT_QUOTES, "UTF-8");
+    $streetAdd = htmlentities($_POST["txtStreetAdd"], ENT_QUOTES, "UTF-8");
+    $city = htmlentities($_POST["txtCity"], ENT_QUOTES, "UTF-8");
+    $state = htmlentities($_POST["txtState"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
@@ -120,10 +128,9 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
     $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
     $query .= 'fldMenuType varchar(20) DEFAULT NULL, '; 
-    $query .= 'fldMenuDesc varchar(20) DEFAULT NULL, ';
-    $query .= 'fldStreetNum varchar(20) DEFAULT NULL, ';
-    $query .= 'fldStreetName varchar(20) DEFAULT NULL, '; 
-    $query .= 'fldCity varchar(20) DEFAULT NULL, ';
+    $query .= 'fldStreetAdd varchar(50) DEFAULT NULL, ';
+    $query .= 'fldCity varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldState varchar(20) DEFAULT NULL, ';
     $query .= 'fldZip varchar(10) DEFAULT NULL, ';
     $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
     $query .= 'fldRestURL varchar(65) DEFAULT NULL, ';
@@ -220,7 +227,7 @@ if (isset($_POST["btnSubmit"])) {
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         
     } // end form is valid
-    }
+    
 } // ends if form was submitted.
 
 //#############################################################################
@@ -306,37 +313,53 @@ if (isset($_POST["btnSubmit"])) {
 		<div>
         <form action="<?php print $phpSelf; ?>"
               method="post"
-              id="frmClassSearch">
+              id="frmSubmitRest">
 
             <fieldset class="wrapper">
-                <legend>CRUD</legend>
+                <legend>Submit a new restaurant!</legend>
                 
                 <fieldset class="wrapperTwo">
-                    <fieldset class="searchTerms">
+                    <fieldset class="submitRest">
                         <label for="txtRestName">Restaurant Name</label>
                             <input type="text" id="txtRestName" name="txtRestName"
-                                   value="<?php print $RestName; ?>"
+                                   value="<?php print $restName; ?>"
                                    tabindex="100" maxlength="130" placeholder="Enter the restaurant's name"
                                    onfocus="this.select()"
                                    autofocus><br>       
-                        <label for="btnFoodType">Type</label>
-                            <input type="radio" id="btnFoodType" name="btnFoodType" value="0">American
-                            <input type="radio" id="btnFoodType" name="btnFoodType" value="1">Italian
-                            <input type="radio" id="btnFoodType" name="btnFoodType" value="2">Mexican
-                            <input type="radio" id="btnFoodType" name="btnFoodType" value="3">Asian
-                            <input type="radio" id="btnFoodType" name="btnFoodType" value="4">Other                
+                        <label for="btnFoodType">Type:</label>
+                            <input type="radio" id="btn" name="btnFoodType" tabindex="110" value="0">American
+                            <input type="radio" id="btn" name="btnFoodType" tabindex="111" value="1">Italian
+                            <input type="radio" id="btn" name="btnFoodType" tabindex="112" value="2">Mexican
+                            <input type="radio" id="btn" name="btnFoodType" tabindex="113" value="3">Asian
+                            <input type="radio" id="btn" name="btnFoodType" tabindex="114" value="4">Other                
                             <br>
-                        <label for="chkMenuType">Menu Options</label>
-                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="0">Gluten-Free Menu
-                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="1">Gluten-Friendly Menu
-                            <input type="checkbox" id="chkMenuType" name="chkMenuType" value="2">Gluten-Free Options
+                            <label>Menu Options (check all that apply):</legend><br>
+                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="120" value="0">Gluten-Free Menu
+                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="121" value="1">Gluten-Friendly Menu
+                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="122" value="2">Gluten-Free Options
                             <br>
-                        <label for="txtEmail">Email Address</label>
-                            <input type="text" class="txtfield" id="txtEmail" name="txtEmail"
+                        <br>
+                        <fieldset>
+                        <label for="txtStreetAdd">Address</label>
+                            <input type="text" class="txtfield" id="txtStreetAdd" name="txtStreetAdd"
                                    value="<?php print $email; ?>"
-                                   tabindex="120" maxlength="50" placeholder="Please enter your email address"
+                                   tabindex="150" maxlength="50" placeholder="Enter the street address"
                                    onfocus="this.select()"
                                    autofocus><br>
+                        <label for="txtCity">City</label>
+                            <input type="text" id="txtCity" name="txtCity"
+                                   value="<?php print $city; ?>"
+                                   tabindex="160" maxlength="20" placeholder="Enter the restaurant's city"
+                                   onfocus="this.select()"
+                                   autofocus>
+                        <label for="txtState">State</label>
+                            <input type="text" id="smallAddress" name="txtState"
+                                   value="<?php print $city; ?>"
+                                   tabindex="170" maxlength="5" 
+                                   onfocus="this.select()"
+                                   autofocus>
+                        </fieldset>
+
 						
                     </fieldset> <!-- ends contact -->
                     
