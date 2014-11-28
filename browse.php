@@ -6,9 +6,13 @@ include "top.php";
 
 <article id="main">
 <p> browse restaurants </p>
-<?php
 
-require_once('../bin/myDatabase.php');
+<?php
+$checkboxes = $_POST['list'];
+$_SESSION['list'] = $checkboxes;
+$i='0';
+
+		require_once('../bin/myDatabase.php');
 
         $dbUserName = 'awbrunet_writer';
         $whichPass = "w"; //flag for which one to use.
@@ -48,14 +52,35 @@ require_once('../bin/myDatabase.php');
             print "<tr>";
             foreach ($row as $field => $value) {
                 if (!is_int($field)) {
-                    print "<td>" . $value . "</td>";
+                    //print "<td>" . $value . "</td>";
+                    print $value. " ";
                 }
             }
-            print "</tr>";
+            print "<br>";
+            //print "<td>" .$i++. "</td>";
+            //print "<td><input type='checkbox' name='list[" .$i. "]' value='/></td>";
+            //print "</tr>";
         }
         print "</table>";
 
+if (isset($_POST["btnSubmit"]))
+{
+	print "<p> ugh 1</p>";
+
+foreach($_SESSION['list'] as $key => $value)
+{
+	echo '<input type="checkbox" name="list[' .$key. ']" value="'.$value.'" checked="checked >';
+}
+}
+
 ?>
+
+<form action="<?php print $phpSelf; ?>"
+              method="post">
+
+	<input type="submit" id="btnSubmit" name="btnSubmit" value="Send my restaurants!" tabindex="500" class="button">
+
+</form>
 </article>
 
 <?php include "footer.php"; ?>

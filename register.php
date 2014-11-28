@@ -121,7 +121,7 @@ if (isset($_POST["btnSubmit"])) {
     
     $fName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     $lName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
-    $allergy = htmlentities($_POST["chkAllergy"], ENT_QUOTES, "UTF-8");
+    $allergy = htmlentities($_POST["lstAllergy"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
@@ -397,9 +397,14 @@ if (isset($_POST["btnSubmit"])) {
                                    onfocus="this.select()"
                                    autofocus><br>
                         <label>Allergy Type:</label>
+                            <select name = "lstAllergy" size="3">
+                                <option>None</option>
+                                <option>Non-Celiac</option>
+                                <option>Celiac</option>
+                            </select><!--
                             <input type="radio" name="chkAllergy" value="None">None
                             <input type="radio" name="chkAllergy" value="Non-Celiac">Non-Celiac 
-                            <input type="radio" name="chkAllergy" value="Celiac">Celiac
+                            <input type="radio" name="chkAllergy" value="Celiac">Celiac-->
                             <br>
 						
                     </fieldset> <!-- ends contact -->
