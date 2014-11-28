@@ -179,7 +179,7 @@ if (isset($_POST["btnSubmit"])) {
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
 
-    $query = 'CREATE TABLE IF NOT EXISTS `tblSavedRestaurants` (  ';
+    $query = 'CREATE TABLE IF NOT EXISTS tblSavedRestaurants (  ';
     $query .= 'fnkUserId int(11) NOT NULL, ';
     $query .= 'fnkRestId int(11) NOT NULL, ';
     $query .= 'PRIMARY KEY (fnkUserId, fnkRestId) ';
@@ -396,10 +396,10 @@ if (isset($_POST["btnSubmit"])) {
                                    tabindex="120" maxlength="50" placeholder="Please enter your email address"
                                    onfocus="this.select()"
                                    autofocus><br>
-                        <label for="chkAllergy">Allergy Type</label>
-                            <input type="checkbox" id="chkAllergy" name="chkAllergy" value="0">None
-                            <input type="checkbox" id="chkAllergy" name="chkAllergy" value="1">Non-Celiac 
-                            <input type="checkbox" id="chkAllergy" name="chkAllergy" value="2">Celiac
+                        <label>Allergy Type</label>
+                            <input type="checkbox" name="chkAllergy" value="0">None
+                            <input type="checkbox" name="chkAllergy" value="1">Non-Celiac 
+                            <input type="checkbox" name="chkAllergy" value="2">Celiac
                             <br>
 						
                     </fieldset> <!-- ends contact -->

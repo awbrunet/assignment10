@@ -131,6 +131,10 @@ input[type=text]{
 	width: 75%;
 }
 
+#frmSubmitRest label{
+	font-weight: bold;
+}
+
 #formHolder{
    background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
    padding: 2em;
@@ -143,13 +147,17 @@ input[type=text]{
 	background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
 }
 
-#smallAddress{
+#state {
 	display:inline;
-	width: 2em;
+	width: 3em;
+}
+#zip {
+	display:inline;
+	width: 3em;
 }
 
 #txtCity{
-	width: 15em;
+	width: 10em;
 }
 
 fieldset {

@@ -35,6 +35,12 @@ $restName = "";
 $city = "";
 $state = "";
 $streetAdd = "";
+$zip = "";
+$phone = "";
+$url = "";
+$menuType = "";
+
+$email = $_SESSION['email'];
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -46,8 +52,9 @@ $restNameERROR = false;
 $streetAddERROR = false;
 $cityERROR = false;
 $stateERROR = false;
-$emailERROR = false;
-
+$zipERROR = false;
+$phoneERROR = false;
+$urlERROR = false;
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -59,7 +66,6 @@ $errorMsg = array();
 // array used to hold form values that will be written to a CSV file
 $dataRecord = array();
 
-$mailed=false; // have we mailed the information to the user?
 $messageA = "";
 $messageB = "";
 $messageC = "";
@@ -88,11 +94,15 @@ if (isset($_POST["btnSubmit"])) {
     
     $restName = htmlentities($_POST["txtRestName"], ENT_QUOTES, "UTF-8");
     $foodType = htmlentities($_POST["btnFoodType"], ENT_QUOTES, "UTF-8");
+    $menuType = htmlentities($_POST["btnMenuType"], ENT_QUOTES, "UTF-8");
     $streetAdd = htmlentities($_POST["txtStreetAdd"], ENT_QUOTES, "UTF-8");
     $city = htmlentities($_POST["txtCity"], ENT_QUOTES, "UTF-8");
     $state = htmlentities($_POST["txtState"], ENT_QUOTES, "UTF-8");
-    $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
+    $zip = htmlentities($_POST["txtZip"], ENT_QUOTES, "UTF-8");
+    $phone = htmlentities($_POST["txtPhone"], ENT_QUOTES, "UTF-8");
+    $url = htmlentities($_POST["txtURL"], ENT_QUOTES, "UTF-8");
     
+   //$menuType = $_POST['chkMenuType'];
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -123,7 +133,7 @@ if (isset($_POST["btnSubmit"])) {
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 	
 	//CREATE IF IT DOESN'T EXIST
-	$query = 'CREATE TABLE IF NOT EXISTS `tblRestaurants` ( ';
+	$query = 'CREATE TABLE IF NOT EXISTS tblRestaurants ( ';
     $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
     $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
     $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
@@ -133,12 +143,12 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldState varchar(20) DEFAULT NULL, ';
     $query .= 'fldZip varchar(10) DEFAULT NULL, ';
     $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
-    $query .= 'fldRestURL varchar(65) DEFAULT NULL, ';
+    $query .= 'fldURL varchar(65) DEFAULT NULL, ';
     $query .= 'PRIMARY KEY (pmkRestId) ';
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
 
-    $query = 'CREATE TABLE IF NOT EXISTS `tblSubmittedRestaurants` (  ';
+    $query = 'CREATE TABLE IF NOT EXISTS tblSubmittedRestaurants (  ';
     $query .= 'fnkUserId int(11) NOT NULL, ';
     $query .= 'fnkRestId int(11) NOT NULL, ';
     $query .= 'PRIMARY KEY (fnkUserId, fnkRestId) ';
@@ -147,8 +157,15 @@ if (isset($_POST["btnSubmit"])) {
 
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblRegister SET fldEmail = ?';
-            $data = array($email);
+            $query = "INSERT INTO tblRestaurants (fldRestName, fldFoodType, fldMenuType, fldStreetAdd, fldCity, fldState, fldZip, fldPhone, fldURL) VALUES ('$restName', '$foodType', '$menuType', '$streetAdd', '$city', '$state', '$zip', '$phone', '$url') ";            
+            $data = array($restName);
+            $data = array($foodType);
+            $data = array($streetAdd);
+            $data = array($city);
+            $data = array($state);
+            $data = array($zip);
+            $data = array($phone);
+            $data = array($url);
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -157,11 +174,26 @@ if (isset($_POST["btnSubmit"])) {
             }
             $results = $thisDatabase->insert($query, $data);
 
-            $primaryKey = $thisDatabase->lastInsert();
+            $query = "SELECT pmkRestId FROM tblRestaurants WHERE fldRestName = '" .$restName. "'";
+            $restArr = $thisDatabase->select($query);
 
+            foreach ($restArr as $result){
+                $restId = $result['pmkRestId'];}
+
+            $query = "SELECT pmkUserId FROM tblUser WHERE fldEmail = '" .$email. "'";
+            $userArr = $thisDatabase->select($query);
+
+            foreach ($userArr as $result){
+                $userId = $result['pmkUserId'];}
+
+            $query = "INSERT INTO tblSubmittedRestaurants (fnkUserId, fnkRestId) VALUES ('$userId', '$restId') ";
+            $results = $thisDatabase->insert($query);
+
+            $primaryKey = $thisDatabase->lastInsert();
+            /*
             $query = "UPDATE tblRegister set fldConfirmed=1 WHERE fldEmail = ? ";
             $data = array($email); 
-            $results = $thisDatabase->update($query, $data); 
+            $results = $thisDatabase->update($query, $data); */
 
 
             if ($debug)
@@ -176,7 +208,7 @@ if (isset($_POST["btnSubmit"])) {
             $thisDatabase->db->rollback();
             if ($debug)
                 print "Error!: " . $e->getMessage() . "</br>";
-            $errorMsg[] = "There was a problem with accpeting your data; please contact us directly.";
+            $errorMsg[] = "There was a problem with accepting your data; please contact us directly.";
         }
         // If the transaction was successful, give success message
         /*if ($dataEntered) {
@@ -205,7 +237,7 @@ if (isset($_POST["btnSubmit"])) {
             //
 
             $messageA = '<h2>Thank you for submitting a new restaurant to myGlutenFree Burlington!</h2>';
-           
+            $messageB = "<p><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
             $messageC .= "<p><b>You submitted:</b><i>   " . $restName . "</i></p>";
 
         
@@ -218,11 +250,11 @@ if (isset($_POST["btnSubmit"])) {
         $to = $email; // the person who filled out the form
         $cc = "";
         $bcc = "";
-        $from = "CRUD <noreply@uvm.edu>";
+        $from = "myGlutenFree Burlington <noreply@uvm.edu>";
 
         // subject of mail should make sense to your form
         $todaysDate = strftime("%x");
-        $subject = "CRUD: " . $todaysDate;
+        $subject = "myGlutenFree Burlington restaurant submission: " . $restName;
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         
@@ -249,22 +281,8 @@ if (isset($_POST["btnSubmit"])) {
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h1>Your Request has ";
-
-        if (!$mailed) {
-            print "not ";
-        }
-
+        print "<h1>Your submission has ";
         print "been processed</h1>";
-
-        print "<p>A copy of this message has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been sent</p>";
-        print "<p>To: " . $email . "</p>";
-        print "<p>Mail Message:</p>";
-
         print $messageA . $messageC;
         
     } else {
@@ -326,38 +344,56 @@ if (isset($_POST["btnSubmit"])) {
                                    tabindex="100" maxlength="130" placeholder="Enter the restaurant's name"
                                    onfocus="this.select()"
                                    autofocus><br>       
-                        <label for="btnFoodType">Type:</label>
-                            <input type="radio" id="btn" name="btnFoodType" tabindex="110" value="0">American
-                            <input type="radio" id="btn" name="btnFoodType" tabindex="111" value="1">Italian
-                            <input type="radio" id="btn" name="btnFoodType" tabindex="112" value="2">Mexican
-                            <input type="radio" id="btn" name="btnFoodType" tabindex="113" value="3">Asian
-                            <input type="radio" id="btn" name="btnFoodType" tabindex="114" value="4">Other                
+                        <label>Type:</label>
+                            <input type="radio" name="btnFoodType" tabindex="110" value="0">American
+                            <input type="radio" name="btnFoodType" tabindex="111" value="1">Italian
+                            <input type="radio" name="btnFoodType" tabindex="112" value="2">Mexican
+                            <input type="radio" name="btnFoodType" tabindex="113" value="3">Asian
+                            <input type="radio" name="btnFoodType" tabindex="114" value="4">Other                
                             <br>
-                            <label>Menu Options (check all that apply):</legend><br>
-                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="120" value="0">Gluten-Free Menu
-                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="121" value="1">Gluten-Friendly Menu
-                            <input type="checkbox" id="btn" name="chkMenuType" tabindex="122" value="2">Gluten-Free Options
+                            <label>Menu Options:</label><br>
+                            <input type="radio" name="btnMenuType" tabindex="120" value="0">Gluten-Free Menu
+                            <input type="radio" name="btnMenuType" tabindex="121" value="1">Gluten-Friendly Menu
+                            <input type="radio" name="btnMenuType" tabindex="122" value="2">Gluten-Free Options
                             <br>
                         <br>
                         <fieldset>
                         <label for="txtStreetAdd">Address</label>
                             <input type="text" class="txtfield" id="txtStreetAdd" name="txtStreetAdd"
-                                   value="<?php print $email; ?>"
+                                   value="<?php print $streetAdd; ?>"
                                    tabindex="150" maxlength="50" placeholder="Enter the street address"
                                    onfocus="this.select()"
                                    autofocus><br>
                         <label for="txtCity">City</label>
                             <input type="text" id="txtCity" name="txtCity"
                                    value="<?php print $city; ?>"
-                                   tabindex="160" maxlength="20" placeholder="Enter the restaurant's city"
+                                   tabindex="160" maxlength="20" placeholder="Enter the city"
                                    onfocus="this.select()"
                                    autofocus>
-                        <label for="txtState">State</label>
-                            <input type="text" id="smallAddress" name="txtState"
-                                   value="<?php print $city; ?>"
-                                   tabindex="170" maxlength="5" 
+                        <label>State</label>
+                            <input type="text" id="state" name="txtState"
+                                   value="<?php print $state; ?>"
+                                   tabindex="170" maxlength="3" 
                                    onfocus="this.select()"
                                    autofocus>
+                        <label>Zip</label>
+                            <input type="text" id="zip" name="txtZip"
+                                   value="<?php print $zip; ?>"
+                                   tabindex="180" maxlength="5" 
+                                   onfocus="this.select()"
+                                   autofocus><br>
+                        <label for="txtPhone">Phone Number</label>
+                            <input type="text" id="txtPhone" name="txtPhone"
+                                   value="<?php print $phone; ?>"
+                                   tabindex="190" maxlength="50" placeholder="Enter the phone #"
+                                   onfocus="this.select()"
+                                   autofocus><br>
+                        <label for="txtURL">Restaurant Website</label>
+                            <input type="text" id="txtURL" name="txtURL"
+                                   value="<?php print $url; ?>"
+                                   tabindex="191" maxlength="50" placeholder="Enter the website"
+                                   onfocus="this.select()"
+                                   autofocus><br>
                         </fieldset>
 
 						
