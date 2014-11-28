@@ -137,7 +137,7 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
     $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
     $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
-    $query .= 'fldMenuType varchar(20) DEFAULT NULL, '; 
+    $query .= 'fldMenuType varchar(30) DEFAULT NULL, '; 
     $query .= 'fldStreetAdd varchar(50) DEFAULT NULL, ';
     $query .= 'fldCity varchar(20) DEFAULT NULL, '; 
     $query .= 'fldState varchar(20) DEFAULT NULL, ';
@@ -345,16 +345,16 @@ if (isset($_POST["btnSubmit"])) {
                                    onfocus="this.select()"
                                    autofocus><br>       
                         <label>Type:</label>
-                            <input type="radio" name="btnFoodType" tabindex="110" value="0">American
-                            <input type="radio" name="btnFoodType" tabindex="111" value="1">Italian
-                            <input type="radio" name="btnFoodType" tabindex="112" value="2">Mexican
-                            <input type="radio" name="btnFoodType" tabindex="113" value="3">Asian
-                            <input type="radio" name="btnFoodType" tabindex="114" value="4">Other                
+                            <input type="radio" name="btnFoodType" tabindex="110" value="American">American
+                            <input type="radio" name="btnFoodType" tabindex="111" value="Italian">Italian
+                            <input type="radio" name="btnFoodType" tabindex="112" value="Mexican">Mexican
+                            <input type="radio" name="btnFoodType" tabindex="113" value="Asian">Asian
+                            <input type="radio" name="btnFoodType" tabindex="114" value="Other">Other                
                             <br>
                             <label>Menu Options:</label><br>
-                            <input type="radio" name="btnMenuType" tabindex="120" value="0">Gluten-Free Menu
-                            <input type="radio" name="btnMenuType" tabindex="121" value="1">Gluten-Friendly Menu
-                            <input type="radio" name="btnMenuType" tabindex="122" value="2">Gluten-Free Options
+                            <input type="radio" name="btnMenuType" tabindex="120" value="Gluten-Free Menu">Gluten-Free Menu
+                            <input type="radio" name="btnMenuType" tabindex="121" value="Gluten-Friendly Menu">Gluten-Free Friendly Menu
+                            <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options">Gluten-Free Options
                             <br>
                         <br>
                         <fieldset>

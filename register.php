@@ -174,7 +174,7 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldLName varchar(20) DEFAULT NULL, '; 
     $query .= 'fldEmail varchar(65) DEFAULT NULL, ';
     $query .= 'fldLogStatus int(11) NOT NULL DEFAULT "0", ';
-    $query .= 'fldAllergy int(11) DEFAULT NULL, ';
+    $query .= 'fldAllergy varchar(20) DEFAULT NULL, ';
     $query .= 'PRIMARY KEY (pmkUserId) ';
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
@@ -396,10 +396,10 @@ if (isset($_POST["btnSubmit"])) {
                                    tabindex="120" maxlength="50" placeholder="Please enter your email address"
                                    onfocus="this.select()"
                                    autofocus><br>
-                        <label>Allergy Type</label>
-                            <input type="checkbox" name="chkAllergy" value="0">None
-                            <input type="checkbox" name="chkAllergy" value="1">Non-Celiac 
-                            <input type="checkbox" name="chkAllergy" value="2">Celiac
+                        <label>Allergy Type:</label>
+                            <input type="radio" name="chkAllergy" value="None">None
+                            <input type="radio" name="chkAllergy" value="Non-Celiac">Non-Celiac 
+                            <input type="radio" name="chkAllergy" value="Celiac">Celiac
                             <br>
 						
                     </fieldset> <!-- ends contact -->

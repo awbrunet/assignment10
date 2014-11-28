@@ -24,15 +24,19 @@ include "top.php";
 		print "<p> <a href = 'login.php'>Login</a></p>";
 	}
 	else{//Display WHO is logged in
-		$query = 'SELECT fldEmail FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$sessionEmail. '"';
-		$email = $thisDatabase->select($query);
+		$query = 'SELECT pmkUserId, fldEmail, fldAllergy FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$sessionEmail. '"';
+		$display = $thisDatabase->select($query);
 
 		print "<p>Logged in as ";
-		foreach ($email as $result){
+		foreach ($display as $result){
 
 			print $result['fldEmail'];
 		}
+		print "<br>";
+		foreach ($display as $result){
 
+			print $result['fldAllergy'];
+		}
 		print "<p><a href='logout.php'>Log out?</a></p>";
 	}
 
