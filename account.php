@@ -32,7 +32,7 @@ include "top.php";
     $query = 'SELECT fldLogStatus FROM tblUser WHERE fldLogStatus=1';
     $checkLogin = $thisDatabase->select($query);
 
-	if(empty($checkLogin)){//If no one is logged in
+	if(empty($email)){//If no one is logged in
 
 		print "<p> <a href = 'login.php'>Login now to save restaurants...and your stomach!</a></p>";
 	}
