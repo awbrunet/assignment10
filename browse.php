@@ -6,7 +6,7 @@ include "top.php";
 
 <article id="main">
 <p> browse restaurants </p>
-<form action="" method="POST">
+<form action="<?php print $phpSelf; ?>" method="POST">
 <?php
 
 if(!empty($_SESSION['email']))
@@ -42,8 +42,8 @@ $todaysDate = strftime("%x");
         foreach ($userArr as $result){
             $userId = $result['pmkUserId'];}
         
-        $query = 'SELECT pmkRestId, fldRestName, fldFoodType, fldMenuType, ';
-        $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, fldPhone, fldURL FROM tblRestaurants';
+        $query = 'SELECT pmkRestId, (fldRestName) AS Name, (fldFoodType) AS Style, (fldMenuType) AS Accomodations, ';
+        $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, (fldPhone) AS Phone, (fldURL) AS Website FROM tblRestaurants';
 
         $results = $thisDatabase->select($query);
 
@@ -88,7 +88,7 @@ $todaysDate = strftime("%x");
                     //print $value. " ";
                 }
             }
-            print "<br>";
+            //print "<br>";
             //print "<td>" .$i. "</td>";
             if(!empty($email)){
             print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</td>";

@@ -5,7 +5,7 @@ include "top.php";
 ?>
 
 <article id="main">
-	<form action="" method="POST">
+	<form action="<?php print $phpSelf; ?>" method="POST">
 	<?php
 	
 	require_once('../bin/myDatabase.php');
