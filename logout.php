@@ -47,7 +47,11 @@ session_destroy ();
 
 <article> 
 	<h1>You are now logged out.</h1>    
-    <?php print '<meta http-equiv="refresh" content="3;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php"/>'; ?>
+    <?php 
+    if(!empty($email)){
+    print '<meta http-equiv="refresh" content="2;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php"/>'; 
+    }
+    ?>
     <p>Auto-redirecting, or navigate now: <a href='index.php'>Home</a>
 
 </article>

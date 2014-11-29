@@ -5,6 +5,7 @@ include "top.php";
 ?>
 
 <article id="main">
+	<form action="" method="POST">
 	<?php
 	
 	require_once('../bin/myDatabase.php');
@@ -22,6 +23,7 @@ include "top.php";
     	$userArr = $thisDatabase->select($query);
     	foreach ($userArr as $result){
     	$userId = $result['pmkUserId'];}
+    	print $userId;
 	}
 	
     $query = 'SELECT fldLogStatus FROM tblUser WHERE fldLogStatus=1';
@@ -54,10 +56,77 @@ include "top.php";
 		$data = array($userId);
 		$results = $thisDatabase->delete($query,$data);
 
-	}	
+	}
+
+		$query = "SELECT DISTINCT tblRestaurants.pmkRestId, tblRestaurants.fldRestName, tblRestaurants.fldFoodType, tblRestaurants.fldMenuType, ";
+        $query .= 'CONCAT(tblRestaurants.fldStreetAdd,", ",tblRestaurants.fldCity,", ",tblRestaurants.fldState,"  ",tblRestaurants.fldZip) AS Address, ';
+        $query .= 'tblRestaurants.fldPhone, tblRestaurants.fldURL FROM tblRestaurants, tblSavedRestaurants ';
+        $query .= 'WHERE tblRestaurants.pmkRestId = tblSavedRestaurants.fnkRestId AND tblSavedRestaurants.fnkUserId = ' .$userId;
+
+        $results = $thisDatabase->select($query);
+		$numberRecords = count($results);
+
+        if($numberRecords < 1){
+        	print "<h2>You have saved " . $numberRecords . " restaurants.</h2>";
+    	}
+    	elseif($numberRecords > 1){
+    		print "<h2>You have saved " . $numberRecords . " restaurants.</h2>";
+    	}
+    	else{
+    		print "<h2>You have saved " . $numberRecords . " restaurant.</h2>";
+    	}
+
+        print "<table>";
+
+        $firstTime = true;
+
+        /* since it is associative array display the field names */
+        foreach ($results as $row) {
+            if ($firstTime) {
+                print "<thead><tr>";
+                $keys = array_keys($row);
+                foreach ($keys as $key) {
+                    if (!is_int($key)) {
+                        print "<th>" . $key . "</th>";
+                    }
+                }
+                print "</tr>";
+                $firstTime = false;
+            }
+            
+            /* display the data, the array is both associative and index so we are
+             *  skipping the index otherwise records are doubled up */
+            print "<tr>";
+            $currId = $row[0];
+            foreach (array_slice($row,1) as $field => $value) {
+                if (!is_int($field)) {
+                    print "<td>" . $value . "</td>";
+                }
+            }
+            print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Unsave</td>";//add chkbox
+            print "</tr>";
+        }
+        print "</table>";
+
+    if (isset($_POST["btnDel"]))
+	{
+		if(empty($_POST['list'])){
+			print "No restaurants selected! Please select any restaurants you want to unsave.";
+		}
+		else{		
+			for($n=0; $n < count($_POST['list']); $n++){
+				$query = 'DELETE FROM tblSavedRestaurants WHERE fnkRestId = ' .$_POST["list"][$n]. ' AND fnkUserId = ' .$userId;
+				$data = array($userId);
+				$data = array($_POST["list"][$n]);
+				$results = $thisDatabase->delete($query,$data);
+				print '<meta http-equiv="refresh" content="1">';
+			}
+		}
+	}
 
 	?>
-	<form action="" method="POST">
+	
+		<input type="submit" id="btnDel" name="btnDel" value="Remove selected restaurants" tabindex="510" class="button">
 		<input type="submit" id="btnClear" name="btnClear" value="Clear my saved restaurants" tabindex="510" class="button">
 	</form>
 </article>

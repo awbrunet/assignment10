@@ -10,7 +10,13 @@ include "top.php";
 <?php
 
 $i='0';
-$email = $_SESSION['email'];
+if(!empty($_SESSION['email']))
+{
+	$email = $_SESSION['email'];
+}
+else{
+	$email = "";
+}
 
 $messageA = '<h2>You have saved a restaurant through myGlutenFree Burlington!</h2>';
 $messageC = "<p><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
@@ -72,15 +78,16 @@ $todaysDate = strftime("%x");
             $currName = $row[1];
             foreach ($row as $field => $value) {
                 if (!is_int($field)) {
-                	$data[] = $value;
-                	$_SESSION['saved'] = $value; 
+                	$data[] = $value; 
                     print "<td>" . $value . "</td>";
                     //print $value. " ";
                 }
             }
             print "<br>";
             print "<td>" .$i. "</td>";
+            if(!empty($email)){
             print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</td>";
+            }
             print "</tr>";
 
             //print "<pre>";
@@ -102,7 +109,7 @@ if (isset($_POST["btnSubmit"]))
 	else{		
 		for($n=0; $n < count($_POST['list']); $n++){
 
-			$query = 'SELECT fnkUserId FROM tblSavedRestaurants WHERE fnkUserId = ' .$_POST['list'][$n];
+			$query = 'SELECT fnkRestId FROM tblSavedRestaurants WHERE fnkRestId = ' .$_POST["list"][$n] . ' AND fnkUserId = $userId';
 			$results = $thisDatabase->select($query); 
 
 			if(empty($results)){
@@ -149,11 +156,13 @@ if (isset($_POST["btnSubmit"]))
 }
 
 
-?>
 
 
-	<br>
-	<input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">	
+	 
+	if(!empty($email)){
+		print '<br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';	
+	}
+?>	
 
 </form>
 </article>

@@ -413,6 +413,7 @@ if (isset($_POST["btnSubmit"])) {
                 <br>
                 <fieldset class="buttons">
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Register!" tabindex="500" class="button">
+                    <p><a href="login.php">Already have an account? Log in here!</a></p>
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->

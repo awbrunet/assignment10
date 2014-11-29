@@ -212,7 +212,7 @@ if (isset($_POST["btnSubmit"])) {
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg) AND !empty($_SESSION ['email'])) { // closing of if marked with: end body submit
         print "<h1>You are now logged in.</h1>";
-        print '<meta http-equiv="refresh" content="3;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/account.php"/>';
+        print '<meta http-equiv="refresh" content="2;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/account.php"/>';
         print "<p>Auto-redirecting, or navigate now: <a href='index.php'>Home</a>";
         
     } else {
