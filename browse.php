@@ -6,11 +6,23 @@ include "top.php";
 
 <article id="main">
 <p> browse restaurants </p>
-
+<form action="" method="POST">
 <?php
-$checkboxes = $_POST['list'];
-$_SESSION['list'] = $checkboxes;
+
 $i='0';
+$email = $_SESSION['email'];
+
+$messageA = '<h2>You have saved a restaurant through myGlutenFree Burlington!</h2>';
+$messageC = "<p><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
+
+$to = $email; // the person who filled out the form
+$cc = "";
+$bcc = "";
+$from = "myGlutenFree Burlington <noreply@uvm.edu>";
+
+// subject of mail should make sense to your form
+$todaysDate = strftime("%x");
+
 
 		require_once('../bin/myDatabase.php');
 
@@ -20,7 +32,13 @@ $i='0';
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
-        $query = 'SELECT * FROM tblRestaurants';
+        $query = "SELECT pmkUserId FROM tblUser WHERE fldEmail = '" .$email. "'";
+        $userArr = $thisDatabase->select($query);
+        foreach ($userArr as $result){
+            $userId = $result['pmkUserId'];}
+        
+        $query = 'SELECT pmkRestId, fldRestName, fldFoodType, fldMenuType, ';
+        $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, fldPhone, fldURL FROM tblRestaurants';
 
         $results = $thisDatabase->select($query);
 
@@ -50,35 +68,92 @@ $i='0';
             /* display the data, the array is both associative and index so we are
              *  skipping the index otherwise records are doubled up */
             print "<tr>";
+            $currId = $row[0];
+            $currName = $row[1];
             foreach ($row as $field => $value) {
                 if (!is_int($field)) {
-                    //print "<td>" . $value . "</td>";
-                    print $value. " ";
+                	$data[] = $value;
+                	$_SESSION['saved'] = $value; 
+                    print "<td>" . $value . "</td>";
+                    //print $value. " ";
                 }
             }
             print "<br>";
-            //print "<td>" .$i++. "</td>";
-            //print "<td><input type='checkbox' name='list[" .$i. "]' value='/></td>";
-            //print "</tr>";
+            print "<td>" .$i. "</td>";
+            print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</td>";
+            print "</tr>";
+
+            //print "<pre>";
+            //print_r($data);
+            //print "</pre>";
+            
+            $i++;
+            $data="";
         }
         print "</table>";
 
+        $list = $_POST['list'];
+
 if (isset($_POST["btnSubmit"]))
 {
-	print "<p> ugh 1</p>";
+	if(empty($_POST['list'])){
+		print "No restaurants saved! Please select any restaurants you want to save for later, then click save.";
+	}
+	else{		
+		for($n=0; $n < count($_POST['list']); $n++){
 
-foreach($_SESSION['list'] as $key => $value)
-{
-	echo '<input type="checkbox" name="list[' .$key. ']" value="'.$value.'" checked="checked >';
+			$query = 'SELECT fnkUserId FROM tblSavedRestaurants WHERE fnkUserId = ' .$_POST['list'][$n];
+			$results = $thisDatabase->select($query); 
+
+			if(empty($results)){
+				if(count($_POST['list']>1)){
+					print "<p>You have saved the following restaurant: <br>";
+				}
+				else{
+					print "<p>You have saved the following restaurants: <br>";
+				}
+
+				$currId = $_POST['list'][$n];
+				//print "<pre>";
+				//print_r($_POST['list'][$n] . " ");
+				//print "</pre>";
+
+				$query = "INSERT INTO tblSavedRestaurants (fnkUserId, fnkRestId) VALUES ('$userId', '$currId') ";
+	            $results = $thisDatabase->insert($query);
+
+	            $query = 'SELECT fldRestName, fldFoodType, fldMenuType, ';
+	        	$query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, fldPhone, fldURL FROM tblRestaurants WHERE pmkRestId = ' .$currId;
+
+	      	 	$results = $thisDatabase->select($query);
+
+	      	 	
+	            foreach ($results as $row){
+	            	foreach($row as $field => $value){
+	            		if(!is_int($field)){
+	            			$messageB .= $value .'<br>';
+	            			print $value .'<br>';
+	            		}
+	            	}
+	            }
+	            $subject = "myGlutenFree Burlington restaurant saved: " . $row[0];
+	            
+	            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+	        }
+	        else{
+	        	print "<p>You have already saved one or more of these restaurants! But I appreciate your enthusiasm. <br>If you're unsure which restaurants you've saved, check your Account page!</p>";
+	        }
+		}
+	}
+	
+
 }
-}
+
 
 ?>
 
-<form action="<?php print $phpSelf; ?>"
-              method="post">
 
-	<input type="submit" id="btnSubmit" name="btnSubmit" value="Send my restaurants!" tabindex="500" class="button">
+	<br>
+	<input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">	
 
 </form>
 </article>
