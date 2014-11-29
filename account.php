@@ -17,13 +17,16 @@ include "top.php";
 	
 	if(!empty($_SESSION['email']))
 	{
-		$sessionEmail = $_SESSION['email'];
+		$email = $_SESSION['email'];
 		print $_SESSION ['email'];
-		$query = "SELECT pmkUserId FROM tblUser WHERE fldEmail = '" .$sessionEmail. "'";
+		$query = "SELECT pmkUserId FROM tblUser WHERE fldEmail = '" .$email. "'";
     	$userArr = $thisDatabase->select($query);
     	foreach ($userArr as $result){
     	$userId = $result['pmkUserId'];}
     	print $userId;
+	}
+	else{
+		$email = "";
 	}
 	
     $query = 'SELECT fldLogStatus FROM tblUser WHERE fldLogStatus=1';
@@ -31,10 +34,10 @@ include "top.php";
 
 	if(empty($checkLogin)){//If no one is logged in
 
-		print "<p> <a href = 'login.php'>Login</a></p>";
+		print "<p> <a href = 'login.php'>Login now to save restaurants...and your stomach!</a></p>";
 	}
 	else{//Display WHO is logged in
-		$query = 'SELECT pmkUserId, fldEmail, fldAllergy FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$sessionEmail. '"';
+		$query = 'SELECT pmkUserId, fldEmail, fldAllergy FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$email. '"';
 		$display = $thisDatabase->select($query);
 
 		print "<p>Logged in as ";
@@ -124,10 +127,12 @@ include "top.php";
 		}
 	}
 
-	?>
 	
-		<input type="submit" id="btnDel" name="btnDel" value="Remove selected restaurants" tabindex="510" class="button">
-		<input type="submit" id="btnClear" name="btnClear" value="Clear my saved restaurants" tabindex="510" class="button">
+		if(!empty($email)){	
+		print '<input type="submit" id="btnDel" name="btnDel" value="Remove selected restaurants" tabindex="510" class="button">';
+		print '<input type="submit" id="btnClear" name="btnClear" value="Clear my saved restaurants" tabindex="510" class="button">';
+		}		
+	?>
 	</form>
 </article>
 

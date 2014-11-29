@@ -9,7 +9,6 @@ include "top.php";
 <form action="" method="POST">
 <?php
 
-$i='0';
 if(!empty($_SESSION['email']))
 {
 	$email = $_SESSION['email'];
@@ -61,7 +60,7 @@ $todaysDate = strftime("%x");
         foreach ($results as $row) {
             if ($firstTime) {
                 print "<thead><tr>";
-                $keys = array_keys($row);
+                $keys = array_keys(array_slice($row,1));
                 foreach ($keys as $key) {
                     if (!is_int($key)) {
                         print "<th>" . $key . "</th>";
@@ -76,15 +75,21 @@ $todaysDate = strftime("%x");
             print "<tr>";
             $currId = $row[0];
             $currName = $row[1];
-            foreach ($row as $field => $value) {
+            $i = 0;
+            foreach (array_slice($row,1) as $field => $value) {
                 if (!is_int($field)) {
-                	$data[] = $value; 
-                    print "<td>" . $value . "</td>";
+                	$data[] = $value;
+                	$i++; 
+                	if($i>5){
+                		print "<td><a href=" . $value . ">Site</a></td>";
+                	}
+                	else{
+                    	print "<td>" . $value . "</td>";}
                     //print $value. " ";
                 }
             }
             print "<br>";
-            print "<td>" .$i. "</td>";
+            //print "<td>" .$i. "</td>";
             if(!empty($email)){
             print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</td>";
             }
@@ -94,7 +99,7 @@ $todaysDate = strftime("%x");
             //print_r($data);
             //print "</pre>";
             
-            $i++;
+            
             $data="";
         }
         print "</table>";
