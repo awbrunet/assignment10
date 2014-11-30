@@ -235,7 +235,8 @@ if (isset($_POST["btnSubmit"])) {
         }
     }
     else{
-        print "<p>Looks like this email is already resgistered! But I appreciate your enthusiasm.</p>";
+        print "<p style='text-align:center;'>Looks like this email is already registered! But I appreciate your enthusiasm.<br>";
+	print "<a href='register.php'>Try Again?</a></p>";
     
     }
         // If the transaction was successful, give success message
@@ -408,7 +409,7 @@ if (isset($_POST["btnSubmit"])) {
                             <select name = "lstAllergy">
                                 <option value = 'None' selected ='selected'>None</option>
                                 <option value = 'Non-Celiac'>Non-Celiac</option>
-                                <option value = 'Celiac'>Celiac</option>
+                                <option value = 'Celiac'>Celiac</option>                            
                             </select><!--
                             <input type="radio" name="chkAllergy" value="None">None
                             <input type="radio" name="chkAllergy" value="Non-Celiac">Non-Celiac 
