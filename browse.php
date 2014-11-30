@@ -50,15 +50,15 @@ $todaysDate = strftime("%x");
 
         $numberRecords = count($results);
 
-        print "<h2>Restaurants: " . $numberRecords . "</h2>";
+        print "<h3>myGlutenFree Burlington has " . $numberRecords . " restaurants in our records!</h3>";
 
-        print "<table>";
+        //print "<table>";
 
         $firstTime = true;
 
         /* since it is associative array display the field names */
         foreach ($results as $row) {
-            if ($firstTime) {
+            /*if ($firstTime) {
                 print "<thead><tr>";
                 $keys = array_keys(array_slice($row,1));
                 foreach ($keys as $key) {
@@ -68,33 +68,48 @@ $todaysDate = strftime("%x");
                 }
                 print "</tr>";
                 $firstTime = false;
-            }
+            }*/
             
             /* display the data, the array is both associative and index so we are
              *  skipping the index otherwise records are doubled up */
-            print "<tr>";
+            
             $currId = $row[0];
             $currName = $row[1];
+
+            print "<h3>" .$row[1]. "</h3>";
+            print "This " .$row[2]. " restaurant offers: " .$row[3]. "<br>";
+            print $row[4]. "<br>";
+            print $row[5]. " <a href='" .$row[6]. "' target='blank'>Site</a> ";
+            print "<br><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?";
+
+            /*
             $i = 0;
             foreach (array_slice($row,1) as $field => $value) {
                 if (!is_int($field)) {
                 	$data[] = $value;
-                	$i++; 
-                	if($i>5){
-                		print "<td><a href=" . $value . ">Site</a></td>";
+                	
+                    if($i==4){
+                        print $value ." | ";
+                    }
+                    elseif($i==5){
+                        print $value. "<br>"; 
+                    }
+                	elseif($i==6){
+                		print "<a href=" . $value . ">Site</a><br>";
                 	}
                 	else{
-                    	print "<td>" . $value . "</td>";}
+                    	print $value . "<br>";}
                     //print $value. " ";
                 }
-            }
+                $i++;
+                
+            }*/
             //print "<br>";
             //print "<td>" .$i. "</td>";
-            if(!empty($email)){
-            print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</td>";
-            }
-            print "</tr>";
-
+            //if(!empty($email)){
+            //print "<input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?";
+            //}
+            
             //print "<pre>";
             //print_r($data);
             //print "</pre>";
@@ -102,7 +117,7 @@ $todaysDate = strftime("%x");
             
             $data="";
         }
-        print "</table>";
+        //print "</table>";
 
         $list = $_POST['list'];
 

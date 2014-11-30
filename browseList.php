@@ -11,10 +11,10 @@ include "top.php";
 
 if(!empty($_SESSION['email']))
 {
-	$email = $_SESSION['email'];
+    $email = $_SESSION['email'];
 }
 else{
-	$email = "";
+    $email = "";
 }
 
 $messageA = '<h2>You have saved a restaurant through myGlutenFree Burlington!</h2>';
@@ -29,7 +29,7 @@ $from = "myGlutenFree Burlington <noreply@uvm.edu>";
 $todaysDate = strftime("%x");
 
 
-		require_once('../bin/myDatabase.php');
+        require_once('../bin/myDatabase.php');
 
         $dbUserName = 'awbrunet_writer';
         $whichPass = "w"; //flag for which one to use.
@@ -78,13 +78,13 @@ $todaysDate = strftime("%x");
             $i = 0;
             foreach (array_slice($row,1) as $field => $value) {
                 if (!is_int($field)) {
-                	$data[] = $value;
-                	$i++; 
-                	if($i>5){
-                		print "<td><a href=" . $value . ">Site</a></td>";
-                	}
-                	else{
-                    	print "<td>" . $value . "</td>";}
+                    $data[] = $value;
+                    $i++; 
+                    if($i>5){
+                        print "<td><a href=" . $value . ">Site</a></td>";
+                    }
+                    else{
+                        print "<td>" . $value . "</td>";}
                     //print $value. " ";
                 }
             }
@@ -108,66 +108,66 @@ $todaysDate = strftime("%x");
 
 if (isset($_POST["btnSubmit"]))
 {
-	if(empty($_POST['list'])){
-		print "No restaurants saved! Please select any restaurants you want to save for later, then click save.";
-	}
-	else{		
-		for($n=0; $n < count($_POST['list']); $n++){
+    if(empty($_POST['list'])){
+        print "No restaurants saved! Please select any restaurants you want to save for later, then click save.";
+    }
+    else{       
+        for($n=0; $n < count($_POST['list']); $n++){
 
-			$query = 'SELECT fnkRestId FROM tblSavedRestaurants WHERE fnkRestId = ' .$_POST["list"][$n] . ' AND fnkUserId = $userId';
-			$results = $thisDatabase->select($query); 
+            $query = 'SELECT fnkRestId FROM tblSavedRestaurants WHERE fnkRestId = ' .$_POST["list"][$n] . ' AND fnkUserId = $userId';
+            $results = $thisDatabase->select($query); 
 
-			if(empty($results)){
-				if(count($_POST['list']>1)){
-					print "<p>You have saved the following restaurant: <br>";
-				}
-				else{
-					print "<p>You have saved the following restaurants: <br>";
-				}
+            if(empty($results)){
+                if(count($_POST['list']>1)){
+                    print "<p>You have saved the following restaurant: <br>";
+                }
+                else{
+                    print "<p>You have saved the following restaurants: <br>";
+                }
 
-				$currId = $_POST['list'][$n];
-				//print "<pre>";
-				//print_r($_POST['list'][$n] . " ");
-				//print "</pre>";
+                $currId = $_POST['list'][$n];
+                //print "<pre>";
+                //print_r($_POST['list'][$n] . " ");
+                //print "</pre>";
 
-				$query = "INSERT INTO tblSavedRestaurants (fnkUserId, fnkRestId) VALUES ('$userId', '$currId') ";
-	            $results = $thisDatabase->insert($query);
+                $query = "INSERT INTO tblSavedRestaurants (fnkUserId, fnkRestId) VALUES ('$userId', '$currId') ";
+                $results = $thisDatabase->insert($query);
 
-	            $query = 'SELECT fldRestName, fldFoodType, fldMenuType, ';
-	        	$query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, fldPhone, fldURL FROM tblRestaurants WHERE pmkRestId = ' .$currId;
+                $query = 'SELECT fldRestName, fldFoodType, fldMenuType, ';
+                $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, fldPhone, fldURL FROM tblRestaurants WHERE pmkRestId = ' .$currId;
 
-	      	 	$results = $thisDatabase->select($query);
+                $results = $thisDatabase->select($query);
 
-	      	 	
-	            foreach ($results as $row){
-	            	foreach($row as $field => $value){
-	            		if(!is_int($field)){
-	            			$messageB .= $value .'<br>';
-	            			print $value .'<br>';
-	            		}
-	            	}
-	            }
-	            $subject = "myGlutenFree Burlington restaurant saved: " . $row[0];
-	            
-	            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
-	        }
-	        else{
-	        	print "<p>You have already saved one or more of these restaurants! But I appreciate your enthusiasm. <br>If you're unsure which restaurants you've saved, check your Account page!</p>";
-	        }
-		}
-	}
-	
+                
+                foreach ($results as $row){
+                    foreach($row as $field => $value){
+                        if(!is_int($field)){
+                            $messageB .= $value .'<br>';
+                            print $value .'<br>';
+                        }
+                    }
+                }
+                $subject = "myGlutenFree Burlington restaurant saved: " . $row[0];
+                
+                $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+            }
+            else{
+                print "<p>You have already saved one or more of these restaurants! But I appreciate your enthusiasm. <br>If you're unsure which restaurants you've saved, check your Account page!</p>";
+            }
+        }
+    }
+    
 
 }
 
 
 
 
-	 
-	if(!empty($email)){
-		print '<br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';	
-	}
-?>	
+     
+    if(!empty($email)){
+        print '<br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';   
+    }
+?>  
 
 </form>
 </article>

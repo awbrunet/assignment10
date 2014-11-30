@@ -143,7 +143,7 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldState varchar(20) DEFAULT NULL, ';
     $query .= 'fldZip varchar(10) DEFAULT NULL, ';
     $query .= 'fldPhone varchar(15) DEFAULT NULL, ';
-    $query .= 'fldURL varchar(65) DEFAULT NULL, ';
+    $query .= 'fldURL varchar(100) DEFAULT NULL, ';
     $query .= 'PRIMARY KEY (pmkRestId) ';
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
@@ -391,7 +391,7 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtURL">Restaurant Website</label>
                             <input type="text" id="txtURL" name="txtURL"
                                    value="<?php print $url; ?>"
-                                   tabindex="191" maxlength="50" placeholder="Enter the website"
+                                   tabindex="191" maxlength="100" placeholder="Enter the website"
                                    onfocus="this.select()"
                                    autofocus><br>
                         </fieldset>
@@ -400,9 +400,8 @@ if (isset($_POST["btnSubmit"])) {
                     </fieldset> <!-- ends contact -->
                     
                 </fieldset> <!-- ends wrapper Two -->
-                <br>
                 <fieldset class="buttons">
-                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Register!" tabindex="500" class="button">
+                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Submit!" tabindex="500" class="button">
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->
