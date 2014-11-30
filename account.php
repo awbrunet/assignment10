@@ -37,7 +37,7 @@ include "top.php";
 		print "<p> <a href = 'login.php'>Login now to save restaurants...and your stomach!</a></p>";
 	}
 	else{//Display WHO is logged in
-		$query = 'SELECT pmkUserId, fldEmail, fldAllergy FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$email. '"';
+		$query = 'SELECT pmkUserId, fldEmail, fldAllergy, fldAdmin FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$email. '"';
 		$display = $thisDatabase->select($query);
 
 		print "<p>Logged in as <b>";
@@ -49,6 +49,11 @@ include "top.php";
 		foreach ($display as $result){
 
 			print $result['fldAllergy'];
+		}
+		foreach ($display as $result){
+
+			if($result['fldAdmin'] == 1)
+				print '<br><b>Admin account</b>';
 		}
 		print "<p><a href='logout.php'>Log out?</a></p>";
 	}

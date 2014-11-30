@@ -69,7 +69,9 @@ $fName = "";
 $lName = "";
 $allergy = "";
 $email = "";
+$admin = 0;
 
+$adminEmail = "awbrunet@uvm.edu";
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
@@ -122,6 +124,7 @@ if (isset($_POST["btnSubmit"])) {
     $fName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     $lName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     $allergy = htmlentities($_POST["lstAllergy"], ENT_QUOTES, "UTF-8");
+    $admin = htmlentities($_POST["chkAdmin"], ENT_QUOTES, "UTF-8");
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     
 
@@ -183,6 +186,7 @@ if (isset($_POST["btnSubmit"])) {
     $query .= 'fldEmail varchar(65) DEFAULT NULL, ';
     $query .= 'fldLogStatus int(11) NOT NULL DEFAULT "0", ';
     $query .= 'fldAllergy varchar(20) DEFAULT NULL, ';
+    $query .= 'fldAdmin int(11) NOT NULL DEFAULT "0", ';
     $query .= 'PRIMARY KEY (pmkUserId) ';
     $query .= ') ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ';
     $results = $thisDatabase->insert($query);
@@ -241,23 +245,23 @@ if (isset($_POST["btnSubmit"])) {
     }
         // If the transaction was successful, give success message
         if ($dataEntered) {
-            /*if ($debug)
+            if ($debug)
                 print "<p>data entered now prepare keys ";
             //#################################################################
             // create a key value for confirmation
 
-            $query = "SELECT fldDateJoined FROM tblRegister WHERE pmkRegisterId=" . $primaryKey;
+            $query = "SELECT pmkUserId FROM tblUser WHERE fldEmail=" . $email;
             $results = $thisDatabase->select($query);
 
-            $dateSubmitted = $results[0]["fldDateJoined"];
+            $confirmId = $results[0];
 
-            $key1 = sha1($dateSubmitted);
+            $key1 = sha1($confirmId);
             $key2 = $primaryKey;
 
             if ($debug)
                 print "<p>key 1: " . $key1;
             if ($debug)
-                print "<p>key 2: " . $key2;*/
+                print "<p>key 2: " . $key2;
 
 
             //#################################################################
@@ -267,9 +271,10 @@ if (isset($_POST["btnSubmit"])) {
 
             $messageA = '<h2>Thank you for registering, ' .$fName. '.</h2>';
 
-            $messageB = "<p>Thank you for taking the time to confirm your registration. 
+            $messageB = "<p>Thank you for taking the time to register with myGlutenFree Burlington! 
             <br>Now that you've confirmed your account, you can login to submit new restaurants, or save your favorites for later!
             <br><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
+            
 
             $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
 
@@ -291,6 +296,20 @@ if (isset($_POST["btnSubmit"])) {
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         
+        if($admin ==1){
+                $messageD = '<p>A user, ' .$email. ', has requested admin privileges. <a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key2 . '">Confirm admin?</a></p>';
+                $messageD .= "<p>or copy and paste this url into a web browser: ";
+                $messageD .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key2 . "</p>";
+
+                $to = $adminEmail; // admin(me)
+                $from = "myGlutenFree Burlington Admin Request <noreply@uvm.edu>";
+
+                // subject of mail should make sense to your form
+                $subject = "myGlutenFree Burlington Admin Request: " . $email;
+
+                $adminMailed = sendMail($to, $cc, $bcc, $from, $subject, $messageD);                
+        }
+
     } // end form is valid
     }
 } // ends if form was submitted.
@@ -410,10 +429,10 @@ if (isset($_POST["btnSubmit"])) {
                                 <option value = 'None' selected ='selected'>None</option>
                                 <option value = 'Non-Celiac'>Non-Celiac</option>
                                 <option value = 'Celiac'>Celiac</option>                            
-                            </select><!--
-                            <input type="radio" name="chkAllergy" value="None">None
-                            <input type="radio" name="chkAllergy" value="Non-Celiac">Non-Celiac 
-                            <input type="radio" name="chkAllergy" value="Celiac">Celiac-->
+                            </select>
+                            
+                        <label>Admin?
+                            <input type="checkbox" id="chkAdmin" name="chkAdmin" value="1" tabindex="300"></label>
                             <br>
 						
                     </fieldset> <!-- ends contact -->

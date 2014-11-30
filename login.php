@@ -2,39 +2,6 @@
 include "top.php";
 
 
-/*
-DATABASE CREATION
-
-CREATE TABLE IF NOT EXISTS `tblUser` (
-  `pmkUserId` int(11) NOT NULL AUTO_INCREMENT,
-  `fldFName` varchar(20) DEFAULT NULL,
-  `fldLName` varchar(20) DEFAULT NULL,
-  `fldEmail` varchar(65) DEFAULT NULL,
-  PRIMARY KEY (`pmkUserId`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-  CREATE TABLE IF NOT EXISTS `tblRestaurants` (
-  `pmkRestId` int(11) NOT NULL AUTO_INCREMENT,
-  `fldRestName` varchar(20) DEFAULT NULL,
-  `fldFoodType` varchar(20) DEFAULT NULL,
-  `fldMenuType` varchar(20) DEFAULT NULL,
-  `fldStreetNum` varchar(20) DEFAULT NULL,
-  `fldStreetName` varchar(20) DEFAULT NULL,
-  `fldCity` varchar(20) DEFAULT NULL,
-  `fldZip` varchar(10) DEFAULT NULL,
-  `fldPhone` varchar(15) DEFAULT NULL,
-  `fldRestURL` varchar(65) DEFAULT NULL,
-  PRIMARY KEY (`pmkRestId`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-  CREATE TABLE IF NOT EXISTS `tblSavedRestaurants` (  
-  `fnkUserId` int(11) NOT NULL,
-  `fnkRestId` int(11) NOT NULL,
-  PRIMARY KEY (`fnkUserId`,`fnkRestId`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-*/
-
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
@@ -126,7 +93,9 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
-    //assume true
+    if ($email == ""){
+        $errorMsg[] = "Please enter your email address";
+    }
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -162,6 +131,12 @@ if (isset($_POST["btnSubmit"])) {
        $query = 'SELECT fldFName FROM tblUser WHERE fldEmail = "' .$email. '"';
        $checkName = $thisDatabase->select($query);
        $_SESSION['name'] = $checkName;
+
+       $query = 'SELECT fldAdmin FROM tblUser WHERE fldEmail = "' .$email. '"';
+       $checkAdmin = $thisDatabase->select($query);
+       foreach ($checkAdmin as $result){
+        $_SESSION['privilege'] = $result['fldAdmin'];
+      } 
 
         if(empty($checkEmail)){
             

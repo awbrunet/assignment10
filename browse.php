@@ -8,13 +8,17 @@ include "top.php";
 
 <form action="<?php print $phpSelf; ?>" method="POST" name="browse">
 <?php
-
+$admin = 0;
 if(!empty($_SESSION['email']))
 {
 	$email = $_SESSION['email'];
 }
 else{
 	$email = "";
+}
+
+if($_SESSION['privilege'] == 1){
+    $admin = 1;
 }
 
 $messageA = '<h2>You have saved a restaurant through myGlutenFree Burlington!</h2>';
@@ -80,40 +84,14 @@ $todaysDate = strftime("%x");
             print "This " .$row[2]. " restaurant offers: " .$row[3]. "<br>";
             print $row[4]. "<br>";
             print $row[5]. " <a href='" .$row[6]. "' target='blank'>Visit website</a> ";
-            print "<br><br><span style='background-color:#8bae35; padding:.3em;'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span></div>";
-
-            /*
-            $i = 0;
-            foreach (array_slice($row,1) as $field => $value) {
-                if (!is_int($field)) {
-                	$data[] = $value;
-                	
-                    if($i==4){
-                        print $value ." | ";
-                    }
-                    elseif($i==5){
-                        print $value. "<br>"; 
-                    }
-                	elseif($i==6){
-                		print "<a href=" . $value . ">Site</a><br>";
-                	}
-                	else{
-                    	print $value . "<br>";}
-                    //print $value. " ";
-                }
-                $i++;
-                
-            }*/
-            //print "<br>";
-            //print "<td>" .$i. "</td>";
-            //if(!empty($email)){
-            //print "<input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?";
-            //}
-            
-            //print "<pre>";
-            //print_r($data);
-            //print "</pre>";
-            
+            print "<br><br><span style='background-color:#00d16c; padding:.3em;'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span>";
+            if($admin == 1){
+                print "<br><br><span style='background-color:#d10300; color:white; padding:.3em;'><input type='checkbox' name='del[]' value='" .$currId. "'/>Delete this restaurant?</span></div>";
+            }
+            else{
+                print "</div>";
+            }
+                     
             
             $data="";
         }
@@ -169,12 +147,34 @@ if (isset($_POST["btnSubmit"]))
 	        else{
 	        	print "<p>You have already saved one or more of these restaurants! But I appreciate your enthusiasm. <br>If you're unsure which restaurants you've saved, check your Account page!</p>";
 	        }
-		}
-	}
-	
-
+		}//end saved loop
+	}//end save check
 }
 
+if (isset($_POST["btnDelete"]))
+{
+    if(!empty($_POST['del'])){
+            for($n=0; $n < count($_POST['del']); $n++){
+                //$query = 'SELECT fnkRestId FROM tblRestaurants, tblSubmittedRestaurants WHERE fnkRestId = ' .$_POST["list"][$n] . ' AND fnkUserId = $userId';
+                //$results = $thisDatabase->select($query); 
+
+                //if(empty($results)){
+
+                $query = 'DELETE FROM tblSubmittedRestaurants WHERE fnkRestId = ' .$_POST["del"][$n];
+                //$data = array($userId);
+                $data = array($_POST["del"][$n]);
+                $results = $thisDatabase->delete($query,$data);
+                
+                $query = 'DELETE FROM tblRestaurants WHERE pmkRestId = ' .$_POST["del"][$n];
+                $results = $thisDatabase->delete($query,$data);    
+
+                $query = 'DELETE FROM tblSavedRestaurants WHERE fnkRestId = ' .$_POST["del"][$n];
+                $results = $thisDatabase->delete($query,$data);  
+
+                print '<meta http-equiv="refresh" content="1">';
+            }
+    }
+}
 
 
 
@@ -182,6 +182,10 @@ if (isset($_POST["btnSubmit"]))
 	if(!empty($email)){
 		print '<br><br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';	
 	}
+    if($admin ==1){
+        print '<br><br><input type="submit" id="btnDelete" name="btnDelete" value="Delete" tabindex="510" class="button">';   
+
+    }
 ?>	
 
 </form>
