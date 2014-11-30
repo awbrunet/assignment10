@@ -13,13 +13,20 @@ header{
 	text-align: center;
     width: 100%;
     height: 100px;
-    background-color: #2f5c39;
+    background-color: #0066D1;
     margin: auto;
     padding-bottom: 0;
+	font-family: Verdana;
+	color:white;
+}
+
+h3{
+	font-family: Verdana;
+	font-size: 1em;
 }
 
 body {
-    background-color: #f1f1ec; 
+    background-color: #e5effa; 
     padding: 0;
     margin: 0 auto;
     font-family: "sansserif";
@@ -27,7 +34,7 @@ body {
 }
 
 nav {
-    background-color: #8bae35;
+    background-color: #1f8cff;
     text-align: center;
     color: white;
     margin: auto;
@@ -49,22 +56,22 @@ nav ol li{
 }
 nav ol li:hover {
 	transition: .25s;
-	background-color: #2f5c39;
+	background-color: #0066D1;
 }
 nav a:link{
     text-decoration: none;
+	color: white;
 }
 nav a:visited{
 	color: white;
 }
 
 article {
-	background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
-	width: 100%;
+width: 100%;
 }
 
 footer {
-	background-color: #8bae35;
+	background-color: #0066D1;
 	display: inline-block;
 	width: 100%;
 	text-align: center;
@@ -78,7 +85,6 @@ table {
 	margin: auto;
 	border: 1px solid;
 	width: 80%;
-	box-shadow: 10px 10px 5px #888888;
 	background: white;
 	border-collapse: collapse;
 }
@@ -128,15 +134,13 @@ input[type=text]{
 }
 
 #formHolder{
-   background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
-   padding: 2em;
+	padding: 2em;
 }
 
 #backgroundSpacer{
    	height: 10px;
 	width: 100%;
 	display:inline;	
-	background: url("https://awbrunet.w3.uvm.edu/cs148/assignment5.0/lib/backgroundtile.jpg");
 }
 
 #state {
@@ -159,7 +163,7 @@ form{
    margin: auto;
    text-align: center;
    width: 80%;
-   background-color: #f1f1ec;
+   background-color: white;
    padding: 2em;		
 }
 
