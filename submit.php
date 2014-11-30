@@ -93,7 +93,6 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
     
     $restName = htmlentities($_POST["txtRestName"], ENT_QUOTES, "UTF-8");
-    str_replace("\'", "`", $restName);
     $foodType = htmlentities($_POST["btnFoodType"], ENT_QUOTES, "UTF-8");
     $menuType = htmlentities($_POST["btnMenuType"], ENT_QUOTES, "UTF-8");
     $streetAdd = htmlentities($_POST["txtStreetAdd"], ENT_QUOTES, "UTF-8");
@@ -105,7 +104,34 @@ if (isset($_POST["btnSubmit"])) {
     
    //$menuType = $_POST['chkMenuType'];
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //
+    // SECTION: 2c Validation
+    //
+    // Validation section. Check each value for possible errors, empty or
+    // not what we expect. You will need an IF block for each element you will
+    // check (see above section 1c and 1d). The if blocks should also be in the
+    // order that the elements appear on your form so that the error messages
+    // will be in the order they appear. errorMsg will be displayed on the form
+    // see section 3b. The error flag ($emailERROR) will be used in section 3c.
+
+    if ($restName == "") {
+        $errorMsg[] = "Please enter a restaurant name";
+    }
+    if ($streetAdd == "") {
+        $errorMsg[] = "Please enter a street address";
+    }
+    if ($city == "") {
+        $errorMsg[] = "Please enter a city";
+    }
+    if ($state == "") {
+        $errorMsg[] = "Please enter a state";
+    }
+    if ($zip == "") {
+        $errorMsg[] = "Please enter a zip code";
+    }
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     // SECTION: 2d Process Form - Passed Validation
     //
@@ -355,12 +381,12 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="radio" name="btnFoodType" tabindex="112" value="Mexican">Mexican
                             <input type="radio" name="btnFoodType" tabindex="113" value="Asian">Asian
                             <input type="radio" name="btnFoodType" tabindex="114" value="Cafe">Cafe
-                            <input type="radio" name="btnFoodType" tabindex="115" value="Other">Other                
+                            <input type="radio" name="btnFoodType" tabindex="115" value="Other" selected = "selected">Other                
                             <br>
                             <label>Menu Options:</label><br>
                             <input type="radio" name="btnMenuType" tabindex="120" value="Gluten-Free Menu">Gluten-Free Menu
                             <input type="radio" name="btnMenuType" tabindex="121" value="Gluten-Friendly Menu">Gluten-Free Friendly Menu
-                            <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options">Gluten-Free Options
+                            <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options" selected = "selected">Gluten-Free Options
                             <br>
                         <br>
                         <fieldset>

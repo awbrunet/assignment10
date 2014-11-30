@@ -136,7 +136,15 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
-    //assume true
+    if ($fName == "") {
+        $errorMsg[] = "Please enter your first name";
+    }
+    if ($lName == "") {
+        $errorMsg[] = "Please enter your last name";
+    }
+    if ($email == "") {
+        $errorMsg[] = "Please enter your email address";
+    }
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -214,7 +222,7 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug)
                 print "<p>pmk= " . $primaryKey;
 
-	// all sql statements are done so lets commit to our changes
+	   // all sql statements are done so lets commit to our changes
             $dataEntered = $thisDatabase->db->commit();
             $dataEntered = true;
             if ($debug)
@@ -259,8 +267,8 @@ if (isset($_POST["btnSubmit"])) {
             $messageA = '<h2>Thank you for registering, ' .$fName. '.</h2>';
 
             $messageB = "<p>Thank you for taking the time to confirm your registration. 
-        <br>Now that you've confirmed your account, you can login to submit new restaurants, or save your favorites for later!
-        <br><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
+            <br>Now that you've confirmed your account, you can login to submit new restaurants, or save your favorites for later!
+            <br><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
 
             $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
 
@@ -395,10 +403,10 @@ if (isset($_POST["btnSubmit"])) {
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="50" placeholder="Please enter your email address"
                                    onfocus="this.select()"
-                                   autofocus><br>
+                                   autofocus><br><br>
                         <label>Allergy Type:</label>
                             <select name = "lstAllergy" size="3">
-                                <option>None</option>
+                                <option selected ='selected'>None</option>
                                 <option>Non-Celiac</option>
                                 <option>Celiac</option>
                             </select><!--
@@ -417,6 +425,7 @@ if (isset($_POST["btnSubmit"])) {
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->
+            <p> Registered users can submit new restaurants that they discover, as well as save their favorites for later!</p>
         </form>
 
     <?php
@@ -424,8 +433,6 @@ if (isset($_POST["btnSubmit"])) {
     ?>
 
 </div>
-
-<p> Registered users can submit new restaurants that they discover, as well as save their favorites for later!</p>
 
 <?php include "footer.php"; ?>
 
