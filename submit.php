@@ -365,7 +365,17 @@ if (isset($_POST["btnSubmit"])) {
               id="frmSubmitRest">
 
             <fieldset class="wrapper">
-                <legend>Submit a new restaurant!</legend>
+                <h3>Submit a new restaurant!</h3>
+                <p>As a registered user of myGlutenFree Burlington, you have the chance to make the lives of those with Celiac's a <i>little</i> easier.
+                    <br>Fill out this form, and other users of myGlutenFree Burlington can benefit from your experience!
+                    <br><br>
+                    <b>Please, take this form seriously.</b>
+                    <br><br>
+                    While a phone number and website address are not required, all other elements are. 
+                    <br>Fill out this form when you're sure you have <i>all</i>
+                    of the necessary information.
+
+                </p> 
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="submitRest">
@@ -374,7 +384,8 @@ if (isset($_POST["btnSubmit"])) {
                                    value="<?php print $restName; ?>"
                                    tabindex="100" maxlength="130" placeholder="Enter the restaurant's name"
                                    onfocus="this.select()"
-                                   autofocus><br>       
+                                   autofocus>
+                                   <br><br>       
                         <label>Type:</label>
                             <input type="radio" name="btnFoodType" tabindex="110" value="American">American
                             <input type="radio" name="btnFoodType" tabindex="111" value="Italian">Italian
@@ -383,7 +394,7 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="radio" name="btnFoodType" tabindex="114" value="Cafe">Cafe
                             <input type="radio" name="btnFoodType" tabindex="115" value="Other" selected = "selected">Other                
                             <br>
-                            <label>Menu Options:</label><br>
+                            <label>Menu Options*:</label><br>
                             <input type="radio" name="btnMenuType" tabindex="120" value="Gluten-Free Menu">Gluten-Free Menu
                             <input type="radio" name="btnMenuType" tabindex="121" value="Gluten-Friendly Menu">Gluten-Free Friendly Menu
                             <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options" selected = "selected">Gluten-Free Options
@@ -437,8 +448,21 @@ if (isset($_POST["btnSubmit"])) {
                 </fieldset> <!-- ends buttons -->
                 
             </fieldset> <!-- Ends Wrapper -->
-        </form>
-
+            <br><br>
+            <p style='width: 40%; margin: auto; font-size:.8em; text-align:justify;'> * Menu types:
+                <br>
+                <b>Gluten-Free Menu:</b> This restaurant offers a distinct and separate Gluten-Free menu. 
+                <br>Your experience here was great!
+                <br>
+                <b>Gluten-Free Friendly Menu:</b> This restaurant has a Gluten-Free section OR specific Gluten-Free menu options. 
+                <br>Your experience here may have been great, but patrons should be aware that you're going to have to do some searching.
+                <br>
+                <b>Gluten-Free Options:</b>  This restaurant offers some Gluten-Free dishes that may or may not be marked. 
+                <br>Your experience here may have been great, but patrons should be aware that it may not be easy to determine <i>exactly</i> what is Gluten-Free here.
+            </p>
+            
+        </form> 
+            
     <?php
     } // end body submit
     ?>
