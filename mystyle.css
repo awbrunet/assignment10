@@ -98,18 +98,18 @@ table th {
 	border: 1px solid;
 	padding: .25em;
 	color: white;
-	background-color: #2f5c39;
+	background-color: #00CED1;
 }
 table tr:nth-child(odd) {
-	background-color: #8bae35;
+	background-color: #0066D1;
 	color: white;
 }
 
 tr:hover{
-	background-color: #2f5c39;
+	background-color: #1f8cff;
 }
 tr:nth-child(odd):hover{
-	background-color: #2f5c39;
+	background-color: #1f8cff;
 }
 
 input[type=text]{
