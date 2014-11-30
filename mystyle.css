@@ -6,6 +6,9 @@ Final Assignment
 
 article{
 	text-align:center;
+	background-color: white;
+	width: 80%;
+	margin: auto;
 }
 
 header{
@@ -64,10 +67,6 @@ nav a:link{
 }
 nav a:visited{
 	color: white;
-}
-
-article {
-width: 100%;
 }
 
 footer {

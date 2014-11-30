@@ -86,7 +86,7 @@ $todaysDate = strftime("%x");
             print $row[5]. " <a href='" .$row[6]. "' target='blank'>Visit website</a> ";
             print "<br><br><span style='background-color:#00d16c; padding:.3em;'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span>";
             if($admin == 1){
-                print "<br><br><span style='background-color:#d10300; color:white; padding:.3em;'><input type='checkbox' name='del[]' value='" .$currId. "'/>Delete this restaurant?</span></div>";
+                print "<br><br><span style='background-color:#e04050; color:white; padding:.3em;'><input type='checkbox' name='del[]' value='" .$currId. "'/>Delete this restaurant?</span></div>";
             }
             else{
                 print "</div>";
