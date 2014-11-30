@@ -45,7 +45,7 @@ include "top.php";
 
 			print $result['fldEmail'];
 		}
-		print "</b><br> Your account is: ";
+		print "</b><br> Your account's recorded allergy is: ";
 		foreach ($display as $result){
 
 			print $result['fldAllergy'];
