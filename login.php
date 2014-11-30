@@ -156,8 +156,12 @@ if (isset($_POST["btnSubmit"])) {
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 	
-	$query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
-    $checkEmail = $thisDatabase->select($query);
+	     $query = 'SELECT fldEmail FROM tblUser WHERE fldEmail = "' .$email. '"';
+       $checkEmail = $thisDatabase->select($query);
+
+       $query = 'SELECT fldFName FROM tblUser WHERE fldEmail = "' .$email. '"';
+       $checkName = $thisDatabase->select($query);
+       $_SESSION['name'] = $checkName;
 
         if(empty($checkEmail)){
             

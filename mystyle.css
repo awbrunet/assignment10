@@ -8,6 +8,10 @@ I sure hope UVM doesn't get all feisty cause a student used their header
 image in a homework assignment.
 */
 
+article{
+	text-align:center;
+}
+
 header{
     display: inline-block;
 	text-align: center;
@@ -16,10 +20,6 @@ header{
     background-color: #2f5c39;
     margin: auto;
     padding-bottom: 0;
-}
-
-h3{
-	text-align: center;
 }
 
 body {
@@ -51,7 +51,7 @@ nav ol li{
     display: inline-block;
     text-decoration: none;
 }
-li:hover {
+nav ol li:hover {
 	transition: .25s;
 	background-color: #2f5c39;
 }
@@ -89,14 +89,12 @@ table {
 	border-collapse: collapse;
 }
 table td {
-	border: collapse;
 	border: 1px solid #000;
 	margin: 0em;
 	padding: .25em;
 	
 }
 table th {
-	border: collapse;
 	border: 1px solid;
 	padding: .25em;
 	color: white;
@@ -168,5 +166,23 @@ form{
    text-align: center;
    width: 80%;
    background-color: #f1f1ec;
-   box-shadow: 10px 10px 5px #888888;		
+   padding: 2em;		
+}
+
+ol{
+	list-style-type: none;
+	text-decoration: none;
+}
+
+li{
+	list-style-type: none;
+	text-decoration: none;	
+}
+
+#browse form{
+   width: 50%;
+}
+
+.restaurant{
+	text-align:left;
 }
