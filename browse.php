@@ -6,7 +6,7 @@ include "top.php";
 
 <article id="main">
 
-<form action="<?php print $phpSelf; ?>" method="POST">
+<form action="<?php print $phpSelf; ?>" method="POST" name="browse">
 <?php
 
 if(!empty($_SESSION['email']))
@@ -43,7 +43,7 @@ $todaysDate = strftime("%x");
             $userId = $result['pmkUserId'];}
         
         $query = 'SELECT pmkRestId, (fldRestName) AS Name, (fldFoodType) AS Style, (fldMenuType) AS Accomodations, ';
-        $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, (fldPhone) AS Phone, (fldURL) AS Website FROM tblRestaurants';
+        $query .= 'CONCAT(fldStreetAdd,", ",fldCity,", ",fldState,"  ",fldZip) AS Address, (fldPhone) AS Phone, (fldURL) AS Website FROM tblRestaurants ORDER BY Name';
 
         $results = $thisDatabase->select($query);
 
@@ -76,11 +76,11 @@ $todaysDate = strftime("%x");
             $currId = $row[0];
             $currName = $row[1];
 
-            print "<h3>" .$row[1]. "</h3>";
+            print "<div class='restaurant'><h3>" .$row[1]. "</h3>";
             print "This " .$row[2]. " restaurant offers: " .$row[3]. "<br>";
             print $row[4]. "<br>";
-            print $row[5]. " <a href='" .$row[6]. "' target='blank'>Site</a> ";
-            print "<br><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?";
+            print $row[5]. " <a href='" .$row[6]. "' target='blank'>Visit website</a> ";
+            print "<br><br><span style='background-color:#8bae35; padding:.3em;'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span></div>";
 
             /*
             $i = 0;
@@ -180,7 +180,7 @@ if (isset($_POST["btnSubmit"]))
 
 	 
 	if(!empty($email)){
-		print '<br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';	
+		print '<br><br><input type="submit" id="btnSubmit" name="btnSubmit" value="Save" tabindex="500" class="button">';	
 	}
 ?>	
 

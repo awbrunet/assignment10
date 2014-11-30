@@ -18,12 +18,12 @@ include "top.php";
 	if(!empty($_SESSION['email']))
 	{
 		$email = $_SESSION['email'];
-		print $_SESSION ['email'];
+		//print $_SESSION ['email'];
 		$query = "SELECT pmkUserId FROM tblUser WHERE fldEmail = '" .$email. "'";
     	$userArr = $thisDatabase->select($query);
     	foreach ($userArr as $result){
     	$userId = $result['pmkUserId'];}
-    	print $userId;
+    	//print $userId;
 	}
 	else{
 		$email = "";
@@ -40,12 +40,12 @@ include "top.php";
 		$query = 'SELECT pmkUserId, fldEmail, fldAllergy FROM tblUser WHERE fldLogStatus=1 AND fldEmail = "' .$email. '"';
 		$display = $thisDatabase->select($query);
 
-		print "<p>Logged in as ";
+		print "<p>Logged in as <b>";
 		foreach ($display as $result){
 
 			print $result['fldEmail'];
 		}
-		print "<br>";
+		print "</b><br> Your account is: ";
 		foreach ($display as $result){
 
 			print $result['fldAllergy'];
@@ -61,9 +61,9 @@ include "top.php";
 
 	}
 
-		$query = "SELECT DISTINCT tblRestaurants.pmkRestId, tblRestaurants.fldRestName, tblRestaurants.fldFoodType, tblRestaurants.fldMenuType, ";
+		$query = "SELECT DISTINCT tblRestaurants.pmkRestId, (tblRestaurants.fldRestName) AS Name, (tblRestaurants.fldFoodType) AS Style, (tblRestaurants.fldMenuType) AS Accomodations, ";
         $query .= 'CONCAT(tblRestaurants.fldStreetAdd,", ",tblRestaurants.fldCity,", ",tblRestaurants.fldState,"  ",tblRestaurants.fldZip) AS Address, ';
-        $query .= 'tblRestaurants.fldPhone, tblRestaurants.fldURL FROM tblRestaurants, tblSavedRestaurants ';
+        $query .= '(tblRestaurants.fldPhone) AS Phone, (tblRestaurants.fldURL) AS Website FROM tblRestaurants, tblSavedRestaurants ';
         $query .= 'WHERE tblRestaurants.pmkRestId = tblSavedRestaurants.fnkRestId AND tblSavedRestaurants.fnkUserId = ' .$userId;
 
         $results = $thisDatabase->select($query);
@@ -82,12 +82,13 @@ include "top.php";
         print "<table>";
 
         $firstTime = true;
-
+        
         /* since it is associative array display the field names */
         foreach ($results as $row) {
+        	$i=0;
             if ($firstTime) {
                 print "<thead><tr>";
-                $keys = array_keys($row);
+                $keys = array_keys(array_slice($row,1));
                 foreach ($keys as $key) {
                     if (!is_int($key)) {
                         print "<th>" . $key . "</th>";
@@ -103,7 +104,14 @@ include "top.php";
             $currId = $row[0];
             foreach (array_slice($row,1) as $field => $value) {
                 if (!is_int($field)) {
-                    print "<td>" . $value . "</td>";
+                    $i++; 
+                    if($i>5){
+                        print "<td><a href='" . $value . "' target='blank'>Site</a></td>";
+                    }
+                    else{
+                    	print "<td>" . $value . "</td>";
+                    }
+
                 }
             }
             print "<td><input type='checkbox' name='list[]' value='" .$currId. "'/>Unsave</td>";//add chkbox
@@ -129,8 +137,9 @@ include "top.php";
 
 	
 		if(!empty($email)){	
-		print '<input type="submit" id="btnDel" name="btnDel" value="Remove selected restaurants" tabindex="510" class="button">';
-		print '<input type="submit" id="btnClear" name="btnClear" value="Clear my saved restaurants" tabindex="510" class="button">';
+			print "<br><br>";
+			print '<input type="submit" id="btnDel" name="btnDel" value="Remove selected restaurants" tabindex="510" class="button">';
+			print '<input type="submit" id="btnClear" name="btnClear" value="Clear my saved restaurants" tabindex="510" class="button">';
 		}		
 	?>
 	</form>

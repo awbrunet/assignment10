@@ -93,6 +93,7 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
     
     $restName = htmlentities($_POST["txtRestName"], ENT_QUOTES, "UTF-8");
+    str_replace("\'", "`", $restName);
     $foodType = htmlentities($_POST["btnFoodType"], ENT_QUOTES, "UTF-8");
     $menuType = htmlentities($_POST["btnMenuType"], ENT_QUOTES, "UTF-8");
     $streetAdd = htmlentities($_POST["txtStreetAdd"], ENT_QUOTES, "UTF-8");
@@ -135,7 +136,7 @@ if (isset($_POST["btnSubmit"])) {
 	//CREATE IF IT DOESN'T EXIST
 	$query = 'CREATE TABLE IF NOT EXISTS tblRestaurants ( ';
     $query .= 'pmkRestId int(11) NOT NULL AUTO_INCREMENT, ';
-    $query .= 'fldRestName varchar(20) DEFAULT NULL, ';
+    $query .= 'fldRestName varchar(50) DEFAULT NULL, ';
     $query .= 'fldFoodType varchar(20) DEFAULT NULL, ';
     $query .= 'fldMenuType varchar(30) DEFAULT NULL, '; 
     $query .= 'fldStreetAdd varchar(50) DEFAULT NULL, ';
@@ -240,6 +241,7 @@ if (isset($_POST["btnSubmit"])) {
             $messageB = "<p><a href='https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php'>Eat Safe!</a></p>";
             $messageC .= "<p><b>You submitted:</b><i>   " . $restName . "</i></p>";
 
+
         
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
@@ -257,6 +259,9 @@ if (isset($_POST["btnSubmit"])) {
         $subject = "myGlutenFree Burlington restaurant submission: " . $restName;
 
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+        if(!empty($email)){
+            print '<meta http-equiv="refresh" content="4;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/browse.php"/>';
+        }
         
     } // end form is valid
     
@@ -349,7 +354,8 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="radio" name="btnFoodType" tabindex="111" value="Italian">Italian
                             <input type="radio" name="btnFoodType" tabindex="112" value="Mexican">Mexican
                             <input type="radio" name="btnFoodType" tabindex="113" value="Asian">Asian
-                            <input type="radio" name="btnFoodType" tabindex="114" value="Other">Other                
+                            <input type="radio" name="btnFoodType" tabindex="114" value="Cafe">Cafe
+                            <input type="radio" name="btnFoodType" tabindex="115" value="Other">Other                
                             <br>
                             <label>Menu Options:</label><br>
                             <input type="radio" name="btnMenuType" tabindex="120" value="Gluten-Free Menu">Gluten-Free Menu
