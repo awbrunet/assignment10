@@ -402,7 +402,7 @@ if (isset($_POST["btnSubmit"])) {
               id="frmClassSearch">
 
             <fieldset class="wrapper">
-                <legend>Create your myGlutenFree Burlington account!</legend>
+                <h3>Create your myGlutenFree Burlington account!</h3>
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">

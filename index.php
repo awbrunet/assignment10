@@ -12,11 +12,11 @@ include "top.php";
 <br><br>
 Gluten is a protein composite found in modern wheat, a foodstuff that forms the backbone of many humans' diets 
 (don't believe me? check out <a href="http://en.wikipedia.org/wiki/Gluten#Uses">Wikipedia</a>). Many individuals are discovering that they are
-being diagnosed with a previously-unheard-of disease: <a href="http://en.wikipedia.org/wiki/Coeliac_disease">Celiac's</a>. Whlie not everyone sensitive to gluten
+being diagnosed with a previously-unheard-of disease: <a href="http://en.wikipedia.org/wiki/Coeliac_disease">Celiac's</a>. While not everyone sensitive to gluten
 has Celiac's, allergic reactions to food are never fun - and in many cases, they can be downright life-threatening. 
 <br><br>
 While the advent of the gluten-free fad diet has led to a rise in interest, bringing about many new gluten-free food products, many restaurants are still
-behind the curve. Anyone who has Celiac's or another gluten sensitivity, or has a loved one with a sensitivity, will know how frustratig and difficult 
+behind the curve. Anyone who has Celiac's or another gluten sensitivity, or has a loved one with a sensitivity, will know how frustrating and difficult 
 it can be to find a place to eat that's safe.
 
 <br>
@@ -28,7 +28,7 @@ My hope is that myGlutenFree Burlington acts as a service to make life easier fo
 While other sites exist that collect gluten free restaurants, I wanted to make a site specific for the greater Burlington area for residents to upload
  restaurants where they had a gluten-friendly experience.
  <br><br><br><br>
- This site was made for the 2014 UVM CS Fair.
+ <i>This site was made for the 2014 UVM CS Fair.</i>
  <br><br>
 
 
