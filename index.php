@@ -27,6 +27,7 @@ My hope is that myGlutenFree Burlington acts as a service to make life easier fo
 <br><br>
 While other sites exist that collect gluten free restaurants, I wanted to make a site specific for the greater Burlington area for residents to upload
  restaurants where they had a gluten-friendly experience.
+<<<<<<< HEAD
 
 <br>
 <h3>So what can I do with this?</h3>
@@ -41,6 +42,10 @@ restaurant, you'll receive an email with the restaurant's information inside!
 Eat Safe!
  <br><br><br><br>
  <i>This site was made for the 2014 UVM CS Fair by Aaron Brunet.</i>
+=======
+ <br><br><br><br>
+ <i>This site was made for the 2014 UVM CS Fair.</i>
+>>>>>>> origin/master
  <br><br>
 
 

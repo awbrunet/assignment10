@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS tblUser (pmkUserId int(11) NOT NULL AUTO_INCREMENT, fldFName varchar(20) DEFAULT NULL, 
+=======
+'CREATE TABLE IF NOT EXISTS tblUser (pmkUserId int(11) NOT NULL AUTO_INCREMENT, fldFName varchar(20) DEFAULT NULL, 
+>>>>>>> origin/master
 fldLName varchar(20) DEFAULT NULL, 
 fldEmail varchar(65) DEFAULT NULL, 
 fldLogStatus int(11) NOT NULL DEFAULT "0", 
