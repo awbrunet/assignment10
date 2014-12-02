@@ -46,7 +46,7 @@ session_destroy ();
 ?>
 
 <article> 
-	<h1>You are now logged out.</h1>    
+	<h3>You are now logged out.</h3>    
     <?php 
     if(!empty($email)){
     print '<meta http-equiv="refresh" content="2;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/index.php"/>'; 

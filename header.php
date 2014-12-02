@@ -1,6 +1,6 @@
 <!--
 Aaron Brunet
-CS148 Assignment 5 Header
+CS148 Header
 -->
 <!-- ######################     Page header   ############################## -->
 <header>

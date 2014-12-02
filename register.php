@@ -333,13 +333,13 @@ if (isset($_POST["btnSubmit"])) {
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h1>Your Request has ";
+        print "<h3>Your Request has ";
 
         if (!$mailed) {
             print "not ";
         }
 
-        print "been processed</h1>";
+        print "been processed</h3>";
 
         print "<p>A copy of this message has ";
         if (!$mailed) {
@@ -402,7 +402,7 @@ if (isset($_POST["btnSubmit"])) {
               id="frmClassSearch">
 
             <fieldset class="wrapper">
-                <legend>Create your myGlutenFree Burlington account!</legend>
+                <h3>Create your myGlutenFree Burlington account!</h3>
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">

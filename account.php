@@ -75,13 +75,13 @@ include "top.php";
 		$numberRecords = count($results);
 
         if($numberRecords < 1){
-        	print "<h2>You have saved " . $numberRecords . " restaurants.</h2>";
+        	print "<h3>You have saved " . $numberRecords . " restaurants.</h3>";
     	}
     	elseif($numberRecords > 1){
-    		print "<h2>You have saved " . $numberRecords . " restaurants.</h2>";
+    		print "<h3>You have saved " . $numberRecords . " restaurants.</h3>";
     	}
     	else{
-    		print "<h2>You have saved " . $numberRecords . " restaurant.</h2>";
+    		print "<h3>You have saved " . $numberRecords . " restaurant.</h3>";
     	}
 
         print "<table>";

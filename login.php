@@ -190,9 +190,9 @@ if (isset($_POST["btnSubmit"])) {
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg) AND !empty($_SESSION ['email'])) { // closing of if marked with: end body submit
-        print "<h1>You are now logged in.</h1>";
+        print "<h3>You are now logged in.</h3>";
         print '<meta http-equiv="refresh" content="2;url=https://awbrunet.w3.uvm.edu/cs148/assignment10/account.php"/>';
-        print "<p>Auto-redirecting, or navigate now: <a href='index.php'>Home</a>";
+        print "<p>Auto-redirecting, or navigate now: <a href='index.php'>Home</a></p>";
         
     } else {
 
@@ -236,14 +236,14 @@ if (isset($_POST["btnSubmit"])) {
 
          */
         ?>
-		</article>
+		
 		<div>
         <form action="<?php print $phpSelf; ?>"
               method="post"
               id="frmClassSearch">
 
             <fieldset class="wrapper">
-                <legend>Log in to your myGlutenFree Burlington account!</legend>
+                <h3>Log in to your myGlutenFree Burlington account!</h3>
                 
                 <fieldset class="wrapperTwo">
                     <fieldset class="searchTerms">
@@ -270,7 +270,7 @@ if (isset($_POST["btnSubmit"])) {
     ?>
 
 </div>
-
+</article>
 <?php include "footer.php"; ?>
 
 </body>

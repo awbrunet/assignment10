@@ -1,16 +1,7 @@
 <?php
-/* the purpose of this page is to accept the hashed date joined and primary key  
- * as passed into this page in the GET format.
- * 
- * I retrieve the date joined from the table for this person and verify that 
- * they are the same. After which i update the confirmed field and acknowlege 
- * to the user they were successful. Then i send an email to the system admin 
- * to approve their membership 
- * 
- * Written By: Robert Erickson robert.erickson@uvm.edu
- * Last updated on: October 17, 2014
- * 
- * 
+/* This page allows the Admin account to approve
+ * new admin account requests.
+ * It declines to use hashing as this is not a site that even uses passwords, but is rather a handy community tool.
  */
 
 include "top.php";

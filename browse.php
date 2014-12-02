@@ -29,7 +29,7 @@ $cc = "";
 $bcc = "";
 $from = "myGlutenFree Burlington <noreply@uvm.edu>";
 
-// subject of mail should make sense to your form
+// subject of mail should make sense
 $todaysDate = strftime("%x");
 
 
@@ -56,24 +56,11 @@ $todaysDate = strftime("%x");
 
         print "<h3>myGlutenFree Burlington has " . $numberRecords . " restaurants in our records!</h3>";
 
-        //print "<table>";
-
         $firstTime = true;
 
         /* since it is associative array display the field names */
         foreach ($results as $row) {
-            /*if ($firstTime) {
-                print "<thead><tr>";
-                $keys = array_keys(array_slice($row,1));
-                foreach ($keys as $key) {
-                    if (!is_int($key)) {
-                        print "<th>" . $key . "</th>";
-                    }
-                }
-                print "</tr>";
-                $firstTime = false;
-            }*/
-            
+                       
             /* display the data, the array is both associative and index so we are
              *  skipping the index otherwise records are doubled up */
             
@@ -84,9 +71,11 @@ $todaysDate = strftime("%x");
             print "This " .$row[2]. " restaurant offers: " .$row[3]. "<br>";
             print $row[4]. "<br>";
             print $row[5]. " <a href='" .$row[6]. "' target='blank'>Visit website</a> ";
-            print "<br><br><span style='background-color:#00d16c; padding:.3em;'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span>";
-            if($admin == 1){
-                print "<br><br><span style='background-color:#e04050; color:white; padding:.3em;'><input type='checkbox' name='del[]' value='" .$currId. "'/>Delete this restaurant?</span></div>";
+	    if(!empty($_SESSION['email'])){
+            	print "<br><br><span class='saveButton'><input type='checkbox' name='list[]' value='" .$currId. "'/>Save this restaurant?</span>";
+            }
+	    if($admin == 1){
+                print "<br><br><span class='delButton'><input type='checkbox' name='del[]' value='" .$currId. "'/>Delete this restaurant?</span></div>";
             }
             else{
                 print "</div>";
@@ -95,8 +84,7 @@ $todaysDate = strftime("%x");
             
             $data="";
         }
-        //print "</table>";
-
+        
         $list = $_POST['list'];
 
 if (isset($_POST["btnSubmit"]))

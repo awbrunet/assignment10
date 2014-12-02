@@ -312,8 +312,8 @@ if (isset($_POST["btnSubmit"])) {
     // If its the first time coming to the form or there are errors we are going
     // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h1>Your submission has ";
-        print "been processed</h1>";
+        print "<h3>Your submission has ";
+        print "been processed</h3>";
         print $messageA . $messageC;
         
     } else {
@@ -392,12 +392,12 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="radio" name="btnFoodType" tabindex="112" value="Mexican">Mexican
                             <input type="radio" name="btnFoodType" tabindex="113" value="Asian">Asian
                             <input type="radio" name="btnFoodType" tabindex="114" value="Cafe">Cafe
-                            <input type="radio" name="btnFoodType" tabindex="115" value="Other" selected = "selected">Other                
+                            <input type="radio" name="btnFoodType" tabindex="115" value="Other" checked="checked">Other                
                             <br>
                             <label>Menu Options*:</label><br>
                             <input type="radio" name="btnMenuType" tabindex="120" value="Gluten-Free Menu">Gluten-Free Menu
                             <input type="radio" name="btnMenuType" tabindex="121" value="Gluten-Friendly Menu">Gluten-Free Friendly Menu
-                            <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options" selected = "selected">Gluten-Free Options
+                            <input type="radio" name="btnMenuType" tabindex="122" value="Gluten-Free Options" checked="checked">Gluten-Free Options
                             <br>
                         <br>
                         <fieldset>
